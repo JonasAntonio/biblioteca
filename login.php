@@ -278,11 +278,11 @@
 <div class="wrapper fadeInDown">
     <div id="formContent">
         <?php
-        if(!empty($_GET['msg'])) {?>
+        if(!empty($_GET['msg'])) { ?>
            <div>
                <?=$_GET['msg']?>
            </div>
-        <?}?>
+        <? } ?>
         <form action="logar.php" method="POST">
             <input type="text" id="login" class="fadeIn first input-field" name="login" placeholder="login">
             <input type="password" id="password" class="fadeIn second input-field" name="senha" placeholder="senha">
