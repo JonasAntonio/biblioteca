@@ -46,7 +46,6 @@ class daoUser implements iPage {
                         senha=:senha
                     WHERE 
                         idtb_usuario = :id;");
-                        var_dump($statement); exit();
                 $statement->bindValue(":id", $source->getIdTbUsuario());
             } else {
                 $statement = Conexao::getInstance()->prepare("INSERT INTO tb_usuario (nomeUsuario, tipo, email, senha) VALUES (:nomeUsuario, :tipo, :email, :senha)");

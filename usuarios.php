@@ -47,6 +47,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $email = $resultado->getEmail();
 }
 
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
+    $usuario = new Usuario($id, "", "", "", "");
+    $msg = $dao->remover($usuario);
+    $id = null;
+}
+
 ?>
 
     <div class='content' xmlns="http://www.w3.org/1999/html">
@@ -88,9 +94,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
                                 echo (!empty($email)) ? $email : '';
                                 ?>" required/>
                                 <Label>Senha</Label>
-                                <input class="form-control" type="text" size="50" name="senha" required/>
+                                <input class="form-control" type="password" size="50" name="senha"/>
                                 <Label>Confirmar Senha</Label>
-                                <input class="form-control" type="text" size="50" name="confirmar_senha" required/>
+                                <input class="form-control" type="password" size="50" name="confirmar_senha"/>
                                 <br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
                                 <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR">
