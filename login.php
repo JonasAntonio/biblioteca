@@ -277,11 +277,11 @@
 
 <div class="wrapper fadeInDown">
     <div id="formContent">
-        <?php
+        <?
         if(!empty($_GET['msg'])) { ?>
-           <div>
-               <?=$_GET['msg']?>
-           </div>
+            <div>
+                <?=$_GET['msg']?>
+            </div>
         <? } ?>
         <form action="logar.php" method="POST">
             <input type="text" id="login" class="fadeIn first input-field" name="login" placeholder="login">

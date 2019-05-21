@@ -1,20 +1,20 @@
 <?php
 
 class Categoria {
-    private $id_tb_categoria;
+    private $idtb_categoria;
     private $nomeCategoria;
 
-    public function __construct($id_tb_categoria, $nomeCategoria) {
-        $this->id_tb_categoria = $id_tb_categoria;
+    public function __construct($idtb_categoria, $nomeCategoria) {
+        $this->idtb_categoria = $idtb_categoria;
         $this->nomeCategoria = $nomeCategoria;
     }
 
     public function getIdTbCategoria() {
-        return $this->id_tb_categoria;
+        return $this->idtb_categoria;
     }
 
-    public function setIdTbCategoria($id_tb_categoria) {
-        $this->$id_tb_categoria = $id_tb_categoria;
+    public function setIdTbCategoria($idtb_categoria) {
+        $this->idtb_categoria = $idtb_categoria;
     }
 
     public function getNomeCategoria() {
@@ -22,7 +22,7 @@ class Categoria {
     }
 
     public function setNomeCategoria($nomeCategoria) {
-        $this->$nomeCategoria = $nomeCategoria;
+        $this->nomeCategoria = $nomeCategoria;
     }
 }
 

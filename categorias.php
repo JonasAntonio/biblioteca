@@ -27,7 +27,6 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $resultado = $object->atualizar($categoria);
     $id = $resultado->getIdTbCategoria();
     $nome = $resultado->getNomeCategoria();
-
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "" ) {
@@ -35,7 +34,6 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $nome != "" ) {
     $msg = $object->salvar($categoria);
     $id = null;
     $nome = null;
-
 }
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
     $categoria = new Categoria($id, "");

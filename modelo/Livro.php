@@ -1,33 +1,33 @@
 <?php
 
 class Livro {
-    private $id_tb_livro;
+    private $idtb_livro;
     private $titulo;
     private $isbn;
     private $edicao;
     private $ano;
     private $upload;
-    private $tb_editora_idtb_editora;
-    private $tb_categoria_idtb_categoria;
+    private $tb_editora_id_tb_editora;
+    private $tb_categoria_id_tb_categoria;
 
-    public function __construct($id_tb_livro, $titulo, $isbn, $edicao, $ano, $upload, $tb_editora_idtb_editora, $id_tb_categoria) {
-        $this->id_tb_livro = $id_tb_livro;
+    public function __construct($idtb_livro, $titulo, $isbn, $edicao, $ano, $upload, $tb_editora_id_tb_editora, $id_tb_categoria) {
+        $this->idtb_livro = $idtb_livro;
         $this->titulo = $titulo;
         $this->isbn = $isbn;
         $this->edicao = $edicao;
         $this->ano = $ano;
         $this->upload = $upload;
         $this->ano = $ano;
-        $this->tb_editora_idtb_editora = $tb_editora_idtb_editora;
-        $this->tb_categoria_idtb_categoria = $id_tb_categoria;
+        $this->tb_editora_id_tb_editora = $tb_editora_id_tb_editora;
+        $this->tb_categoria_id_tb_categoria = $id_tb_categoria;
     }
 
     public function getIdTbLivro() {
-        return $this->id_tb_livro;
+        return $this->idtb_livro;
     }
 
-    public function setIdTbLivro($id_tb_livro) {
-        $this->id_tb_livro = $id_tb_livro;
+    public function setIdTbLivro($idtb_livro) {
+        $this->idtb_livro = $idtb_livro;
     }
 
     public function getTitulo() {
@@ -71,19 +71,19 @@ class Livro {
     }
 
     public function getIdTbEditora() {
-        return $this->tb_editora_idtb_editora;
+        return $this->tb_editora_id_tb_editora;
     }
 
-    public function setIdTbEditora($tb_editora_idtb_editora) {
-        $this->tb_editora_idtb_editora = $tb_editora_idtb_editora;
+    public function setIdTbEditora($tb_editora_id_tb_editora) {
+        $this->tb_editora_id_tb_editora = $tb_editora_id_tb_editora;
     }
 
     public function getIdTbCategoria() {
-        return $this->tb_categoria_idtb_categoria;
+        return $this->tb_categoria_id_tb_categoria;
     }
 
-    public function setIdTbCategoria($tb_categoria_idtb_categoria) {
-        $this->tb_categoria_idtb_categoria = $tb_categoria_idtb_categoria;
+    public function setIdTbCategoria($tb_categoria_id_tb_categoria) {
+        $this->tb_categoria_id_tb_categoria = $tb_categoria_id_tb_categoria;
     }
 
 }

@@ -6,7 +6,7 @@
  * Time: 21:45
  */
 
-class autor
+class Autor
 {
 
     private $idtb_autores;

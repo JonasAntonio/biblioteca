@@ -1,5 +1,5 @@
 <?php
-$_SESSION['active_window'] = "usuarios";
+$_SESSION['active_window'] = "livros";
 
 require_once "view/template.php";
 require_once "dao/daoLivro.php";
@@ -20,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ano = (isset($_POST["ano"]) && $_POST["ano"] != null) ? $_POST["ano"] : "";
     $editora = (isset($_POST["editora"]) && $_POST["editora"] != null) ? $_POST["editora"] : "";
     $categoria = (isset($_POST["categoria"]) && $_POST["categoria"] != null) ? $_POST["categoria"] : "";
+    // implementar upload
+    $upload = null;
 } else if (!isset($id)) {
     // Se não se não foi setado nenhum valor para variável $id
     $id = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
@@ -32,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $titulo != "" ) {
-    $livro = new Livro($id, $titulo, $isbn, $ano, $edicao);
+    $livro = new Livro($id, $titulo, $isbn, $edicao, $ano, $upload, $editora, $categoria);
     $msg = $dao->salvar($livro);
     $id = null;
     $titulo = null;
@@ -44,7 +46,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" && $titulo != "" ) {
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
-    $livro = new Livro($id, '', '', '', '');
+    $livro = new Livro($id, '', '', '', '', '', '', '');
     $resultado = $dao->atualizar($livro);
     $id = $resultado->getIdTbLivro();
     $titulo = $resultado->getTitulo();
@@ -71,38 +73,32 @@ $categorias = $dao->getAllCategorias();
                         </div>
                         <div class='content table-responsive'>
                             <form action="?act=save&id=" method="POST" name="form1">
-
-                                <input type="hidden" name="id" value="<?php
-                                echo (!empty($id)) ? $id : '';
+                                <input type="hidden" name="id" value="<?= (!empty($id)) ? $id : '';
                                 ?>"/>
                                 <Label>Título</Label>
-                                <input class="form-control" type="text" size="50" name="titulo" value="<?php
-                                echo (!empty($titulo)) ? $titulo : '';
+                                <input class="form-control" type="text" size="50" name="titulo" value="<?= (!empty($titulo)) ? $titulo : '';
                                 ?>" required/>
                                 <Label>ISBN</Label>
-                                <input class="form-control" type="text" size="50" name="isbn" value="<?php
-                                echo (!empty($isbn)) ? $isbn : '';
+                                <input class="form-control" type="text" size="50" name="isbn" value="<?= (!empty($isbn)) ? $isbn : '';
                                 ?>" required/>
                                 <Label>Edição</Label>
-                                <input class="form-control" type="text" size="50" name="edicao" value="<?php
-                                echo (!empty($edicao)) ? $edicao : '';
+                                <input class="form-control" type="text" size="50" name="edicao" value="<?= (!empty($edicao)) ? $edicao : '';
                                 ?>" required/>
                                 <Label>Ano</Label>
-                                <input class="form-control" type="text" size="50" name="ano" value="<?php
-                                echo (!empty($ano)) ? $ano : '';
+                                <input class="form-control" type="text" size="50" name="ano" value="<?= (!empty($ano)) ? $ano : '';
                                 ?>" required/>
                                 <Label>Editora</Label>
                                 <select class="form-control" name="editora">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($editoras as $key=>$value) {?>
-                                        <option value="<?=$value['idtb_editora']?>"><?=$value['nomeEditora']?></option>
+                                        <option value="<?=$value['idtb_editora']?>" <?=$value['idtb_editora'] == $editora ? "selected" : '' ?>><?=$value['nomeEditora']?></option>
                                     <?}?>
                                 </select>
                                 <Label>Categoria</Label>
                                 <select class="form-control" name="categoria">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($categorias as $key=>$value) {?>
-                                        <option value="<?=$value['idtb_categoria']?>"><?=$value['nomeCategoria']?></option>
+                                        <option value="<?=$value['idtb_categoria']?>" <?=$value['idtb_categoria'] == $categoria ? "selected" : '' ?>><?=$value['nomeCategoria']?></option>
                                     <?}?>
                                 </select>
                                 <br/>
