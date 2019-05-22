@@ -26,9 +26,9 @@ class daoLivro implements iPage{
                         titulo=:titulo,
                         isbn=:isbn,
                         edicao=:edicao,
-                        ano=:ano
-                        upload=:upload
-                        tb_editora_id_tb_editora=:tb_editora_id_tb_editora
+                        ano=:ano,
+                        upload=:upload,
+                        tb_editora_id_tb_editora=:tb_editora_id_tb_editora,
                         tb_categoria_id_tb_categoria=:tb_categoria_id_tb_categoria
                     WHERE 
 												idtb_livro = :id;");
@@ -50,9 +50,7 @@ class daoLivro implements iPage{
 			$statement->bindValue(":upload", $source->getUpload());
 			$statement->bindValue(":tb_editora_id_tb_editora", $source->getIdTbEditora());
 			$statement->bindValue(":tb_categoria_id_tb_categoria", $source->getIdTbCategoria());
-			echo "<pre>";
-			var_dump($statement);
-			echo "</pre>";
+			
 			if ($statement->execute()) {
 				if ($statement->rowCount() > 0) {
 					return "<script> alert('Dados cadastrados com sucesso !'); </script>";
