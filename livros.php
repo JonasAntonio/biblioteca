@@ -106,8 +106,7 @@ $categorias = $dao->getAllCategorias();
 <!--                                <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR">-->
                                 <hr>
                             </form>
-                            <?php
-                            echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
+                            <?= (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
                             //chamada a paginação
                             $dao->tabelapaginada();
                             ?>
@@ -119,5 +118,5 @@ $categorias = $dao->getAllCategorias();
     </div>
 
 <?php
-template::footer();
+//template::footer();
 ?>
