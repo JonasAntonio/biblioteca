@@ -7,7 +7,10 @@ class daoLivro implements iPage{
 
 	public function remover($source){
 		try {
-			$statement = Conexao::getInstance()->prepare("DELETE FROM tb_livro WHERE idtb_livro = :id");
+			$statement = Conexao::getInstance()->prepare("
+				DELETE FROM tb_livro_has_tb_autores WHERE tb_livro_id_tb_livro = :id;
+				DELETE FROM tb_livro WHERE idtb_livro = :id;
+			");
 			$statement->bindValue(":id", $source->getIdTbLivro());
 			if ($statement->execute()) {
 				return "<script> alert('Registo foi excluído com êxito !'); </script>";
@@ -58,8 +61,10 @@ class daoLivro implements iPage{
 			
 			if ($statement->execute()) {
 				$id_livro = Conexao::getInstance()->lastInsertId();
-
 				if ($statement->rowCount() > 0) {
+					$stmtDel = Conexao::getInstance()->prepare("
+						DELETE FROM tb_livro_has_tb_autores WHERE tb_livro_id_tb_livro = :id_livro;
+					");
 					foreach ($autores as $key => $value) {
 						$stmt = Conexao::getInstance()->prepare("
 							INSERT INTO 
@@ -73,6 +78,7 @@ class daoLivro implements iPage{
 						);
 						$stmt->bindValue(":id_livro", $id_livro);
 						$stmt->bindValue(":id_autor", $value);
+						$stmtDel->execute();
 						$stmt->execute();
 					}
 					return "<script> alert('Dados cadastrados com sucesso !'); </script>";
@@ -165,7 +171,7 @@ class daoLivro implements iPage{
 		//endereço atual da página
 		$endereco = $_SERVER ['PHP_SELF'];
 		/* Constantes de configuração */
-		define('QTDE_REGISTROS', 2);
+		define('QTDE_REGISTROS', 10);
 		define('RANGE_PAGINAS', 3);
 		/* Recebe o número da página via parâmetro na URL */
 		$pagina_atual = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
@@ -260,12 +266,8 @@ class daoLivro implements iPage{
 		}
 	}
 
-	public function getLastInsertedBook() {
-		$sql = "SELECT max(idtb_autores) AS id_last_book FROM tb_autores";
-		$statement = Conexao::getInstance()->prepare($sql);
-		$statement->execute();
-		$dados = $statement->fetchAll(PDO::FETCH_ASSOC);
-		return $dados[0]['id_last_book'];
+	public function getAutoresLivro() {
+
 	}
 
 }

@@ -58,7 +58,13 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $ano = $resultado->getAno();
     $editora = $resultado->getIdTbEditora();
     $categoria =$resultado->getIdTbCategoria();
-    $autores =$resultado->getIdTbAutor();
+    // $autores =$resultado->getIdTbAutor();
+}
+
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
+    $livro = new Livro($id, "", "", "", "", "", "", "");
+    $msg = $dao->remover($livro);
+    $id = null;
 }
 
 $editoras = $dao->getAllEditoras();
