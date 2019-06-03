@@ -28,11 +28,11 @@ class Exemplar {
         $this->tipoExemplar = $tipoExemplar;
     }
 
-    public function getIdTbLivro() {
+    public function getTbLivroIdTbLivro() {
         return $this->id_tb_livro;
     }
 
-    public function setIdTbLivro($id_tb_livro) {
+    public function setTbLivroIdTbLivro($id_tb_livro) {
         $this->id_tb_livro = $id_tb_livro;
     }
 

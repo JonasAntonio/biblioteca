@@ -9,14 +9,14 @@ class Template
 {
     public static function header()
     {
-       session_start();
-       if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
-       {
-           unset($_SESSION['login']);
-           unset($_SESSION['senha']);
-           header('location:login.php');
-       }
-       $logado = $_SESSION['login'];
+        session_start();
+        if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
+        {
+            unset($_SESSION['login']);
+            unset($_SESSION['senha']);
+            header('location:login.php');
+        }
+        $logado = $_SESSION['login'];
 
         echo "<!doctype html>
 <html lang='en'>
@@ -109,6 +109,24 @@ class Template
                         <p>Livros</p>
                     </a>
                 </li>
+                <li class=\"";echo $_SESSION['active_window'] == 'emprestimos' ? 'active' : 'deactive';echo"\">
+                    <a href='emprestimos.php'>
+                        <i class=\"ti-user\"></i>
+                        <p>Empréstimos</p>
+                    </a>
+                </li>
+                <li class=\"";echo $_SESSION['active_window'] == 'exemplares' ? 'active' : 'deactive';echo"\">
+                    <a href='exemplares.php'>
+                        <i class=\"ti-user\"></i>
+                        <p>Exemplares</p>
+                    </a>
+                </li>
+                <li class=\"";echo $_SESSION['active_window'] == 'reserva' ? 'active' : 'deactive';echo"\">
+                    <a href='reserva.php'>
+                        <i class=\"ti-user\"></i>
+                        <p>Reservas</p>
+                    </a>
+                </li>
                 <li class=\"";echo $_SESSION['active_window'] == 'usuarios' ? 'active' : 'deactive';echo"\">
                     <a href='usuarios.php'>
                         <i class=\"ti-user\"></i>
@@ -118,6 +136,7 @@ class Template
             </ul>
         </div>
     </div>";
+    
     }
     public static function mainpanel()
     {

@@ -1,31 +1,12 @@
 <?php
 require_once "iPage.php";
 
-class daoUser implements iPage {
-
-    public function auth($login, $senha) {
-        $cmd = Conexao::getInstance()->prepare("SELECT senha from tb_usuario where nomeUsuario = :nomeUsuario");
-
-    // $senha = password_verify($senha, PASSWORD_BCRYPT);
-
-        $cmd->bindValue(":nomeUsuario", $login);
-        $cmd->execute();
-        $rs = $cmd->fetch(PDO::FETCH_COLUMN);
-        if($rs == NULL){
-            return false;
-        }else{
-            if(password_verify($senha, $rs)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
+class daoExemplar implements iPage {
+    
     public function remover($source){
         try {
-            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_usuario WHERE idtb_usuario = :id");
-            $statement->bindValue(":id", $source->getIdTbUsuario());
+            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_exemplar WHERE idtb_exemplar = :id");
+            $statement->bindValue(":id", $source->getIdTbExemplar());
             if ($statement->execute()) {
                 return "<script> alert('Registo foi excluído com êxito !'); </script>";
             } else {
@@ -35,26 +16,23 @@ class daoUser implements iPage {
             return "Erro: " . $erro->getMessage();
         }
     }
+
     public function salvar($source){
         try {
-            if (!empty($source->getIdTbUsuario())) {
+            if (!empty($source->getIdTbExemplar())) {
                 $statement = Conexao::getInstance()->prepare("
-                    UPDATE tb_usuario SET 
-                        nomeUsuario=:nomeUsuario,
-                        tipo=:tipo,
-                        email=:email,
-                        senha=:senha
+                    UPDATE tb_exemplar SET 
+                        tipoExemplar=:tipoExemplar,
+                        tb_livro_id_tb_livro=:tb_livro_id_tb_livro
                     WHERE 
-                        idtb_usuario = :id;");
-                $statement->bindValue(":id", $source->getIdTbUsuario());
+                        idtb_exemplar = :id;");
+                $statement->bindValue(":id", $source->getIdTbExemplar());
             } else {
-                $statement = Conexao::getInstance()->prepare("INSERT INTO tb_usuario (nomeUsuario, tipo, email, senha) VALUES (:nomeUsuario, :tipo, :email, :senha)");
+                $statement = Conexao::getInstance()->prepare("INSERT INTO tb_exemplar (tipoExemplar, tb_livro_id_tb_livro) VALUES (:tipoExemplar, :tb_livro_id_tb_livro)");
             }
 
-            $statement->bindValue(":nomeUsuario", $source->getNomeUsuario());
-            $statement->bindValue(":tipo", $source->getTipo());
-            $statement->bindValue(":senha", $source->getSenha());
-            $statement->bindValue(":email", $source->getEmail());
+            $statement->bindValue(":tipoExemplar", $source->getTipoExemplar());
+            $statement->bindValue(":tb_livro_id_tb_livro", $source->getTbLivroIdTbLivro());
             if ($statement->execute()) {
                 if ($statement->rowCount() > 0) {
                     return "<script> alert('Dados cadastrados com sucesso !'); </script>";
@@ -71,15 +49,13 @@ class daoUser implements iPage {
 
     public function atualizar($source){
         try {
-            $statement = Conexao::getInstance()->prepare("SELECT * FROM tb_usuario WHERE idtb_usuario = :id");
-            $statement->bindValue(":id", $source->getIdTbUsuario());
+            $statement = Conexao::getInstance()->prepare("SELECT * FROM tb_exemplar WHERE idtb_exemplar = :id");
+            $statement->bindValue(":id", $source->getIdTbExemplar());
             if ($statement->execute()) {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $source->setIdTbUsuario($rs->idtb_usuario);
-                $source->setNomeUsuario($rs->nomeUsuario);
-                $source->setTipo($rs->tipo);
-                $source->setSenha(Usuario::encodePassword($rs->senha));
-                $source->setEmail($rs->email);
+                $source->setIdTbExemplar($rs->idtb_exemplar);
+                $source->setTipoExemplar($rs->tipoExemplar);
+                $source->setTbLivroIdTbLivro($rs->tbLivroIdTbLivro);
                 return $source;
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
@@ -88,8 +64,8 @@ class daoUser implements iPage {
             return "Erro: " . $erro->getMessage();
         }
     }
-    public function tabelapaginada()
-    {
+
+    public function tabelapaginada(){
         //endereço atual da página
         $endereco = $_SERVER ['PHP_SELF'];
         /* Constantes de configuração */
@@ -100,12 +76,12 @@ class daoUser implements iPage {
         /* Calcula a linha inicial da consulta */
         $linha_inicial = ($pagina_atual - 1) * QTDE_REGISTROS;
         /* Instrução de consulta para paginação com MySQL */
-        $sql = "SELECT idtb_usuario, nomeUsuario, tipo, email FROM tb_usuario LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
+        $sql = "SELECT idtb_exemplar, tipoExemplar, tb_livro_id_tb_livro FROM tb_exemplar LIMIT {$linha_inicial}, " . QTDE_REGISTROS;
         $statement = Conexao::getInstance()->prepare($sql);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_OBJ);
         /* Conta quantos registos existem na tabela */
-        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_usuario";
+        $sqlContador = "SELECT COUNT(*) AS total_registros FROM tb_exemplar";
         $statement = Conexao::getInstance()->prepare($sqlContador);
         $statement->execute();
         $valor = $statement->fetch(PDO::FETCH_OBJ);
@@ -131,21 +107,19 @@ class daoUser implements iPage {
              <thead>
                <tr style='text-transform: uppercase;' class='active'>
                 <th style='text-align: center; font-weight: bolder;'>ID</th>
-                <th style='text-align: center; font-weight: bolder;'>Nome</th>
-                <th style='text-align: center; font-weight: bolder;'>Tipo</th>
-                <th style='text-align: center; font-weight: bolder;'>Email</th>
+                <th style='text-align: center; font-weight: bolder;'>Tipo de Exemplar</th>
+                <th style='text-align: center; font-weight: bolder;'>Livro</th>
                 <th style='text-align: center; font-weight: bolder;' colspan='2'>Ações</th>
                </tr>
              </thead>
              <tbody>";
                     foreach ($dados as $source):
                         echo "<tr>
-                <td style='text-align: center'>$source->idtb_usuario</td>
-                <td style='text-align: center'>$source->nomeUsuario</td>
-                <td style='text-align: center'>";echo Usuario::getTipoText($source->tipo); echo "</td>
-                <td style='text-align: center'>$source->email</td>
-                <td style='text-align: center'><a href='?act=upd&id=$source->idtb_usuario' title='Alterar'><i class='ti-reload'></i></a></td>
-                <td style='text-align: center'><a href='?act=del&id=$source->idtb_usuario' title='Remover'><i class='ti-close'></i></a></td>
+                <td style='text-align: center'>$source->idtb_exemplar</td>
+                <td style='text-align: center'>$source->tipoExemplar</td>
+                <td style='text-align: center'>$source->tb_livro_id_tb_livro</td>
+                <td style='text-align: center'><a href='?act=upd&id=$source->idtb_exemplar' title='Alterar'><i class='ti-reload'></i></a></td>
+                <td style='text-align: center'><a href='?act=del&id=$source->idtb_exemplar' title='Remover'><i class='ti-close'></i></a></td>
                </tr>";
                     endforeach;
                     echo "
@@ -168,4 +142,8 @@ class daoUser implements iPage {
              ";
                 endif;
     }
+
 }
+
+
+?>

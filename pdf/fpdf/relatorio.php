@@ -17,10 +17,10 @@ $dados = $statement->fetchAll(PDO::FETCH_ASSOC);
 $html = '
 <table>
     <thead>
-        <tr>
-            <th>ID</th>
-            <th>NOME</th>
-        </tr>
+        <th>
+            <td>ID</td>
+            <td>NOME</td>
+        </th>
     </thead>    
     <tbody>';
 foreach ($dados as $key => $value) {

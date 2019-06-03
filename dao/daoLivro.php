@@ -1,6 +1,7 @@
 <?php
 
 require_once "iPage.php";
+require_once "modelo/Livro.php";
 
 class daoLivro implements iPage{
 
@@ -19,6 +20,10 @@ class daoLivro implements iPage{
 	}
 
 	public function salvar($source){
+
+	}
+
+	public function salvarLivro($source, $autores){
 		try {
 			if (!empty($source->getIdTbLivro())) {
 				$statement = Conexao::getInstance()->prepare("
@@ -52,7 +57,24 @@ class daoLivro implements iPage{
 			$statement->bindValue(":tb_categoria_id_tb_categoria", $source->getIdTbCategoria());
 			
 			if ($statement->execute()) {
+				$id_livro = Conexao::getInstance()->lastInsertId();
+
 				if ($statement->rowCount() > 0) {
+					foreach ($autores as $key => $value) {
+						$stmt = Conexao::getInstance()->prepare("
+							INSERT INTO 
+								tb_livro_has_tb_autores (
+									tb_livro_id_tb_livro, 
+									tb_autores_id_tb_autores
+								) VALUES (
+									:id_livro, 
+									:id_autor
+							)"
+						);
+						$stmt->bindValue(":id_livro", $id_livro);
+						$stmt->bindValue(":id_autor", $value);
+						$stmt->execute();
+					}
 					return "<script> alert('Dados cadastrados com sucesso !'); </script>";
 				} else {
 					return "<script> alert('Erro ao tentar efetivar cadastro !'); </script>";
@@ -81,6 +103,14 @@ class daoLivro implements iPage{
 		return $dados;
 	}
 
+	public function getAllAutores() {
+		$sql = "SELECT * FROM tb_autores";
+		$statement = Conexao::getInstance()->prepare($sql);
+		$statement->execute();
+		$dados = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $dados;
+	}
+
 	public static function getCategoria($id) {
 		$sql = "SELECT * FROM tb_categoria WHERE idtb_categoria = $id";
 		$statement = Conexao::getInstance()->prepare($sql);
@@ -91,6 +121,14 @@ class daoLivro implements iPage{
 
 	public static function getEditora($id) {
 		$sql = "SELECT * FROM tb_editora WHERE idtb_editora = $id";
+		$statement = Conexao::getInstance()->prepare($sql);
+		$statement->execute();
+		$dados = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $dados;
+	}
+
+	public static function getAutor($id) {
+		$sql = "SELECT * FROM tb_autores WHERE idtb_autores = $id";
 		$statement = Conexao::getInstance()->prepare($sql);
 		$statement->execute();
 		$dados = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -211,10 +249,25 @@ class daoLivro implements iPage{
 		endif;
 	}
 
+	public function listAll() {
+		$sql = "SELECT * FROM tb_livro";
+		$statement = Conexao::getInstance()->prepare($sql);
+		if ($statement->execute()) {
+			$rs = $statement->fetch(PDO::FETCH_OBJ);
+			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
+	}
+
+	public function getLastInsertedBook() {
+		$sql = "SELECT max(idtb_autores) AS id_last_book FROM tb_autores";
+		$statement = Conexao::getInstance()->prepare($sql);
+		$statement->execute();
+		$dados = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $dados[0]['id_last_book'];
+	}
 
 }
 
-
-
-
- ?>
+?>

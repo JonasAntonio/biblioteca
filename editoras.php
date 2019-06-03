@@ -1,5 +1,4 @@
 <?php
-$_SESSION['active_window'] = "editoras";
 
 require_once "view/template.php";
 require_once "dao/daoEditora.php";
@@ -9,6 +8,7 @@ require_once "db/Conexao.php";
 $object = new daoEditora();
 
 template::header();
+$_SESSION['active_window'] = "editoras";
 template::sidebar();
 template::mainpanel();
 

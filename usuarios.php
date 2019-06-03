@@ -1,5 +1,4 @@
 <?php
-$_SESSION['active_window'] = "usuarios";
 
 require_once "view/template.php";
 require_once "dao/daoUser.php";
@@ -11,6 +10,7 @@ $dao = new daoUser();
 template::header();
 template::sidebar();
 template::mainpanel();
+$_SESSION['active_window'] = "usuarios";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";

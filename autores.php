@@ -1,5 +1,4 @@
 <?php
-$_SESSION['active_window'] = "autores";
 
 require_once "view/template.php";
 require_once "dao/daoAutor.php";
@@ -9,6 +8,7 @@ require_once "db/Conexao.php";
 $object = new daoAutor();
 
 template::header();
+$_SESSION['active_window'] = "autores";
 template::sidebar();
 template::mainpanel();
 

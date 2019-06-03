@@ -1,5 +1,4 @@
 <?php
-$_SESSION['active_window'] = "categorias";
 
 require_once "view/template.php";
 require_once "dao/daoCategoria.php";
@@ -9,6 +8,7 @@ require_once "db/Conexao.php";
 $object = new daoCategoria();
 
 template::header();
+$_SESSION['active_window'] = "categorias";
 template::sidebar();
 template::mainpanel();
 
