@@ -6,7 +6,7 @@ class daoUser implements iPage {
     public function auth($login, $senha) {
         $cmd = Conexao::getInstance()->prepare("SELECT senha from tb_usuario where nomeUsuario = :nomeUsuario");
 
-    // $senha = password_verify($senha, PASSWORD_BCRYPT);
+        // $senha = password_verify($senha, PASSWORD_BCRYPT);
 
         $cmd->bindValue(":nomeUsuario", $login);
         $cmd->execute();
@@ -35,6 +35,7 @@ class daoUser implements iPage {
             return "Erro: " . $erro->getMessage();
         }
     }
+
     public function salvar($source){
         try {
             if (!empty($source->getIdTbUsuario())) {
@@ -88,8 +89,8 @@ class daoUser implements iPage {
             return "Erro: " . $erro->getMessage();
         }
     }
-    public function tabelapaginada()
-    {
+
+    public function tabelapaginada(){
         //endereço atual da página
         $endereco = $_SERVER ['PHP_SELF'];
         /* Constantes de configuração */
@@ -175,6 +176,18 @@ class daoUser implements iPage {
 		if ($statement->execute()) {
 			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
 			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
+    }
+
+    public static function getNomeUsuarioId($id) {
+        $sql = "SELECT nomeUsuario FROM tb_usuario WHERE idtb_usuario =  :id";
+        $statement = Conexao::getInstance()->prepare($sql);
+        $statement->bindValue(":id", $id);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs[0]['nomeUsuario'];
 		} else {
 			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
 		}

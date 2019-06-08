@@ -1,5 +1,5 @@
 <?php
-
+require_once "dao/daoLivro.php";
 // require_once "iPage.php";
 class daoEmprestimo {
     public function remover($source) {
@@ -176,8 +176,8 @@ class daoEmprestimo {
             <tbody>
                 <?php foreach ($dados as $source) { ?>
                 <tr>
-                    <td style='text-align: center'><?=$source->tb_usuario_id_tb_usuario?></td>
-                    <td style='text-align: center'><?=$source->tb_exemplar_id_tb_exemplar?></td>
+                    <td style='text-align: center'><?=daoUser::getNomeUsuarioId($source->tb_usuario_id_tb_usuario)?></td>
+                    <td style='text-align: center'><?=daoLivro::getTituloLivro($source->tb_exemplar_id_tb_exemplar)?></td>
                     <td style='text-align: center'><?=formatarData($source->dataEmprestimo)?></td>
                     <td style='text-align: center'><?=formatarData($source->dataDevolucao)?></td>
                     <td style='text-align: center'><?=formatarData($source->dataDevolucao)?></td>
@@ -190,12 +190,12 @@ class daoEmprestimo {
             <div class='box-paginacao' style='text-align: center'>
                 <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$primeira_pagina' title='Primeira Página'> Primeira  |</a>
                 <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$pagina_anterior' title='Página Anterior'> Anterior  |</a>
-                    <?php for ($i = $range_inicial; $i <= $range_final; $i++) {
-                        $destaque = ($i == $pagina_atual) ? 'destaque' : ''; ?>
-                        <a class='box-numero $destaque' href='$endereco?page=$i'> ( <?=$i?> ) </a>
-                    <?php } ?>
-                    <a class='box-navegacao $exibir_botao_final' href='$endereco?page=$proxima_pagina' title='Próxima Página'>| Próxima  </a>
-                    <a class='box-navegacao $exibir_botao_final' href='$endereco?page=$ultima_pagina'  title='Última Página'>| Última  </a>
+                <?php for ($i = $range_inicial; $i <= $range_final; $i++) {
+                    $destaque = ($i == $pagina_atual) ? 'destaque' : ''; ?>
+                    <a class='box-numero $destaque' href='$endereco?page=$i'> ( <?=$i?> ) </a>
+                <?php } ?>
+                <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$proxima_pagina?>' title='Próxima Página'>| Próxima  </a>
+                <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$ultima_pagina?>'  title='Última Página'>| Última  </a>
         <?php } else { ?>
             </div><p class='bg-danger'>Nenhum registro foi encontrado!</p>
         <?php } ?>

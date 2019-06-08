@@ -280,6 +280,28 @@ class daoLivro implements iPage{
 		}
 	}
 
+	public static function getTituloLivro($id) {
+		$sql = "
+					SELECT 
+					l.titulo
+			FROM
+					tb_livro AS l
+						JOIN
+					tb_exemplar e ON e.tb_livro_id_tb_livro = l.idtb_livro
+			WHERE
+				e.idtb_exemplar = :id
+			GROUP BY e.tb_livro_id_tb_livro
+		";
+		$statement = Conexao::getInstance()->prepare($sql);
+		$statement->bindValue(":id", $id);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs[0]['titulo'];
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
+	}
+
 }
 
 ?>
