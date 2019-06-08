@@ -58,7 +58,8 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id != "") {
     $ano = $resultado->getAno();
     $editora = $resultado->getIdTbEditora();
     $categoria =$resultado->getIdTbCategoria();
-    // $autores =$resultado->getIdTbAutor();
+    $autores =$dao->getAutoresLivro($id);
+    print_r($autores);
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
@@ -98,21 +99,30 @@ $autoresCadastrados = $dao->getAllAutores();
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($editoras as $key=>$value) { ?>
                                         <option value="<?=$value['idtb_editora']?>" <?=$value['idtb_editora'] == $editora ? "selected" : '' ?>><?=$value['nomeEditora']?></option>
-                                    <? } ?>
+                                    <?php } ?>
                                 </select>
                                 <Label>Categoria</Label>
                                 <select class="form-control" name="categoria">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($categorias as $key=>$value) { ?>
                                         <option value="<?=$value['idtb_categoria']?>" <?=$value['idtb_categoria'] == $categoria ? "selected" : '' ?>><?=$value['nomeCategoria']?></option>
-                                    <? } ?>
+                                    <?php } ?>
                                 </select>
                                 <Label>Autores</Label>
                                 <select class="form-control" name="autores[]" multiple>
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($autoresCadastrados as $key=>$value) { ?>
-                                        <option value="<?=$value['idtb_autores']?>" <?=$value['idtb_autores'] == $autores ? "selected" : '' ?>><?=$value['nomeAutor']?></option>
-                                    <? } ?>
+                                        <option value="<?=$value['idtb_autores']?>" 
+                                        <?php
+                                        if(!empty($autores)) {
+                                            if(array_key_exists($key, $autores)) {
+                                                if($value['idtb_autores'] == $autores[$key]['id_autores']){
+                                                    echo 'selected';
+                                                } 
+                                            }
+                                        } ?>
+                                            ><?=$value['nomeAutor']?></option>
+                                    <?php } ?>
                                 </select>
                                 <br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">

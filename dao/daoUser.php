@@ -93,7 +93,7 @@ class daoUser implements iPage {
         //endereço atual da página
         $endereco = $_SERVER ['PHP_SELF'];
         /* Constantes de configuração */
-        define('QTDE_REGISTROS', 2);
+        define('QTDE_REGISTROS', 10);
         define('RANGE_PAGINAS', 3);
         /* Recebe o número da página via parâmetro na URL */
         $pagina_atual = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
@@ -168,4 +168,16 @@ class daoUser implements iPage {
              ";
                 endif;
     }
+
+    public function listAll(){
+        $sql = "SELECT * FROM tb_usuario";
+		$statement = Conexao::getInstance()->prepare($sql);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
+    }
+
 }

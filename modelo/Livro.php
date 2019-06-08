@@ -86,6 +86,15 @@ class Livro {
         $this->tb_categoria_id_tb_categoria = $tb_categoria_id_tb_categoria;
     }
 
+    public function getTituloLivroPorId($id) {
+        $sql = "SELECT titulo FROM tb_livro WHERE idtb_livro = :id";
+        $statement = Conexao::getInstance()->prepare($sql);
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+        $dados = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $dados[0]['titulo'];
+    }
+
 }
 
 ?>

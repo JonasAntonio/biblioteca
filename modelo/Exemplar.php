@@ -36,6 +36,22 @@ class Exemplar {
         $this->id_tb_livro = $id_tb_livro;
     }
 
+    public static function getNomeTipoExemplar($tipoExemplar) {
+        switch ($tipoExemplar) {
+            case '0':
+                return 'Circular';
+                break;
+            
+            case '1':
+                return 'Não Circular';
+                break;
+            
+            default:
+                return '---';
+                break;
+        }
+    }
+
 }
 
 ?>

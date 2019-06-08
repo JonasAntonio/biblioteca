@@ -9,14 +9,15 @@ class Template
 {
     public static function header()
     {
-        session_start();
-        if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
-        {
-            unset($_SESSION['login']);
-            unset($_SESSION['senha']);
-            header('location:login.php');
-        }
-        $logado = $_SESSION['login'];
+        require_once "functions/functions.php";
+        // session_start();
+        // if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
+        // {
+        //     unset($_SESSION['login']);
+        //     unset($_SESSION['senha']);
+        //     header('location:login.php');
+        // }
+        // $logado = $_SESSION['login'];
 
         echo "<!doctype html>
 <html lang='en'>
@@ -62,7 +63,7 @@ class Template
 </div>
 </body>
     <!--   Core JS Files   -->
-    <script src=\"assets/js/jquery-1.10.2.js\" type=\"text/javascript\"></script>
+    <script src=\"assets/js/jquery.js\" type=\"text/javascript\"></script>
 	<script src=\"assets/js/bootstrap.min.js\" type=\"text/javascript\"></script>
 	<!--  Checkbox, Radio & Switch Plugins -->
 	<script src=\"assets/js/bootstrap-checkbox-radio.js\"></script>
@@ -121,8 +122,8 @@ class Template
                         <p>Exemplares</p>
                     </a>
                 </li>
-                <li class=\"";echo $_SESSION['active_window'] == 'reserva' ? 'active' : 'deactive';echo"\">
-                    <a href='reserva.php'>
+                <li class=\"";echo $_SESSION['active_window'] == 'reservas' ? 'active' : 'deactive';echo"\">
+                    <a href='reservas.php'>
                         <i class=\"ti-user\"></i>
                         <p>Reservas</p>
                     </a>

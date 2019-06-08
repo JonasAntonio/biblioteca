@@ -55,7 +55,7 @@ class daoExemplar implements iPage {
                 $rs = $statement->fetch(PDO::FETCH_OBJ);
                 $source->setIdTbExemplar($rs->idtb_exemplar);
                 $source->setTipoExemplar($rs->tipoExemplar);
-                $source->setTbLivroIdTbLivro($rs->tbLivroIdTbLivro);
+                $source->setTbLivroIdTbLivro($rs->tb_livro_id_tb_livro);
                 return $source;
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
@@ -69,7 +69,7 @@ class daoExemplar implements iPage {
         //endereço atual da página
         $endereco = $_SERVER ['PHP_SELF'];
         /* Constantes de configuração */
-        define('QTDE_REGISTROS', 2);
+        define('QTDE_REGISTROS', 10);
         define('RANGE_PAGINAS', 3);
         /* Recebe o número da página via parâmetro na URL */
         $pagina_atual = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
@@ -116,8 +116,8 @@ class daoExemplar implements iPage {
                     foreach ($dados as $source):
                         echo "<tr>
                 <td style='text-align: center'>$source->idtb_exemplar</td>
-                <td style='text-align: center'>$source->tipoExemplar</td>
-                <td style='text-align: center'>$source->tb_livro_id_tb_livro</td>
+                <td style='text-align: center'>"; echo Exemplar::getNomeTipoExemplar($source->tipoExemplar); echo "</td>
+                <td style='text-align: center'>"; echo Livro::getTituloLivroPorId($source->tb_livro_id_tb_livro); echo "</td>
                 <td style='text-align: center'><a href='?act=upd&id=$source->idtb_exemplar' title='Alterar'><i class='ti-reload'></i></a></td>
                 <td style='text-align: center'><a href='?act=del&id=$source->idtb_exemplar' title='Remover'><i class='ti-close'></i></a></td>
                </tr>";
@@ -141,6 +141,27 @@ class daoExemplar implements iPage {
                     echo "<p class='bg-danger'>Nenhum registro foi encontrado!</p>
              ";
                 endif;
+    }
+
+    public function listAll(){
+        $sql = "
+            SELECT 
+                e.idtb_exemplar,
+                e.tipoExemplar,
+                l.titulo
+            FROM
+                tb_exemplar AS e
+                    LEFT JOIN
+                tb_livro l ON e.tb_livro_id_tb_livro = l.idtb_livro
+            ORDER BY l.idtb_livro
+        ";
+		$statement = Conexao::getInstance()->prepare($sql);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
     }
 
 }

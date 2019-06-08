@@ -39,7 +39,8 @@ class daoLivro implements iPage{
                         tb_editora_id_tb_editora=:tb_editora_id_tb_editora,
                         tb_categoria_id_tb_categoria=:tb_categoria_id_tb_categoria
                     WHERE 
-												idtb_livro = :id;");
+												idtb_livro = :id;
+				");
 				$statement->bindValue(":id", $source->getIdTbLivro());
 			} else {
 				$statement = Conexao::getInstance()->prepare("
@@ -78,6 +79,7 @@ class daoLivro implements iPage{
 						);
 						$stmt->bindValue(":id_livro", $id_livro);
 						$stmt->bindValue(":id_autor", $value);
+						$stmtDel->bindValue(":id_livro", $id_livro);
 						$stmtDel->execute();
 						$stmt->execute();
 					}
@@ -259,15 +261,23 @@ class daoLivro implements iPage{
 		$sql = "SELECT * FROM tb_livro";
 		$statement = Conexao::getInstance()->prepare($sql);
 		if ($statement->execute()) {
-			$rs = $statement->fetch(PDO::FETCH_OBJ);
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
 			return $rs;
 		} else {
 			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
 		}
 	}
 
-	public function getAutoresLivro() {
-
+	public function getAutoresLivro($id_livro) {
+		$sql = "SELECT tb_autores_id_tb_autores AS id_autores FROM tb_livro_has_tb_autores WHERE tb_livro_id_tb_livro = :id_livro";
+		$statement = Conexao::getInstance()->prepare($sql);
+		$statement->bindValue(":id_livro", $id_livro);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
 	}
 
 }

@@ -16,7 +16,7 @@ template::mainpanel();
                         </div>
                         <div class='content table-responsive'>
                             <h4 class="title">Seja bem-vindo </h4>
-
+                            
                         </div>
                     </div>
                 </div>

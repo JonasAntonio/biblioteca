@@ -8,9 +8,9 @@ require_once "db/Conexao.php";
 $dao = new daoUser();
 
 template::header();
+$_SESSION['active_window'] = "usuarios";
 template::sidebar();
 template::mainpanel();
-$_SESSION['active_window'] = "usuarios";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = (isset($_POST["id"]) && $_POST["id"] != null) ? $_POST["id"] : "";
