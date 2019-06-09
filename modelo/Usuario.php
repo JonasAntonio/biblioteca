@@ -72,7 +72,11 @@ class Usuario {
             ],
             [
                 'valor' => 2,
-                'nome' => 'Comum'
+                'nome' => 'Aluno'
+            ],
+            [
+                'valor' => 3,
+                'nome' => 'Professor'
             ],
         ];
     }
@@ -86,7 +90,10 @@ class Usuario {
                 return 'Biblioteca';
                 break;
             case 2:
-                return 'Comum';
+                return 'Aluno';
+                break;
+            case 3:
+                return 'Professor';
                 break;
         }
     }

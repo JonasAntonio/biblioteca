@@ -26,5 +26,5 @@ else{
 
     unset ($_SESSION['login']);
     unset ($_SESSION['senha']);
-    header('location:login.php?msg=Erro ao fazer login! Usuário ou senha inválidos');
+    header('location:login.php?msg=Erro ao fazer login! Email ou senha inválidos!');
 }

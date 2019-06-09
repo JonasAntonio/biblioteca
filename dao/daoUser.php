@@ -3,12 +3,12 @@ require_once "iPage.php";
 
 class daoUser implements iPage {
 
-    public function auth($login, $senha) {
-        $cmd = Conexao::getInstance()->prepare("SELECT senha from tb_usuario where nomeUsuario = :nomeUsuario");
+    public function auth($email, $senha) {
+        $cmd = Conexao::getInstance()->prepare("SELECT senha FROM tb_usuario WHERE email = :email");
 
         // $senha = password_verify($senha, PASSWORD_BCRYPT);
 
-        $cmd->bindValue(":nomeUsuario", $login);
+        $cmd->bindValue(":email", $email);
         $cmd->execute();
         $rs = $cmd->fetch(PDO::FETCH_COLUMN);
         if($rs == NULL){

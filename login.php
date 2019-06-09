@@ -284,7 +284,7 @@
             </div>
         <? } ?>
         <form action="logar.php" method="POST">
-            <input type="text" id="login" class="fadeIn first input-field" name="login" placeholder="login">
+            <input type="text" id="login" class="fadeIn first input-field" name="login" placeholder="email">
             <input type="password" id="password" class="fadeIn second input-field" name="senha" placeholder="senha">
             <input type="submit" class="fadeIn fourth" value="Log In">
         </form>

@@ -9,14 +9,14 @@ class Template
 {
     public static function header() {
         require_once "functions/functions.php";
-        // session_start();
-        // if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
-        // {
-        //     unset($_SESSION['login']);
-        //     unset($_SESSION['senha']);
-        //     header('location:login.php');
-        // }
-        // $logado = $_SESSION['login'];
+        session_start();
+        if((!isset ($_SESSION['login'])) and (!isset ($_SESSION['senha'])))
+        {
+            unset($_SESSION['login']);
+            unset($_SESSION['senha']);
+            header('location:login.php');
+        }
+        $logado = $_SESSION['login'];
         ?>
         <!doctype html>
         <html lang='en'>
@@ -159,38 +159,7 @@ class Template
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Boas vindas!</a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        <!--li>
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="ti-panel"></i>
-                                <p>Stats</p>
-                            </a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="ti-bell"></i>
-                                <p class="notification">5</p>
-                                <p>Notifications</p>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Notification 1</a></li>
-                                <li><a href="#">Notification 2</a></li>
-                                <li><a href="#">Notification 3</a></li>
-                                <li><a href="#">Notification 4</a></li>
-                                <li><a href="#">Another notification</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">
-                                <i class="ti-settings"></i>
-                                <p>Settings</p>
-                            </a>
-                        </li-->
-                    </ul>
+                    <a class="navbar-brand" href="index.php">Home</a>
                 </div>
             </div>
         </nav>
