@@ -84,6 +84,7 @@ $autoresCadastrados = $dao->getAllAutores();
                             <p class='category'>Lista de Livros do Sistema</p>
                         </div>
                         <div class='content table-responsive'>
+                        <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 1) { ?>
                             <form action="?act=save&id=" method="POST" name="form1">
                                 <input type="hidden" name="id" value="<?= !empty($id) ? $id : ''?>"/>
                                 <Label>Título</Label>
@@ -95,21 +96,21 @@ $autoresCadastrados = $dao->getAllAutores();
                                 <Label>Ano</Label>
                                 <input class="form-control" type="text" size="50" name="ano" value="<?= !empty($ano) ? $ano : ''?>" required/>
                                 <Label>Editora</Label>
-                                <select class="form-control" name="editora">
+                                <select class="form-control multiselect" name="editora">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($editoras as $key=>$value) { ?>
                                         <option value="<?=$value['idtb_editora']?>" <?=$value['idtb_editora'] == $editora ? "selected" : '' ?>><?=$value['nomeEditora']?></option>
                                     <?php } ?>
                                 </select>
                                 <Label>Categoria</Label>
-                                <select class="form-control" name="categoria">
+                                <select class="form-control multiselect" name="categoria">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($categorias as $key=>$value) { ?>
                                         <option value="<?=$value['idtb_categoria']?>" <?=$value['idtb_categoria'] == $categoria ? "selected" : '' ?>><?=$value['nomeCategoria']?></option>
                                     <?php } ?>
                                 </select>
                                 <Label>Autores</Label>
-                                <select class="form-control" name="autores[]" multiple>
+                                <select class="form-control multiselect" name="autores[]" multiple>
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($autoresCadastrados as $key=>$value) { ?>
                                         <option value="<?=$value['idtb_autores']?>" 
@@ -129,6 +130,7 @@ $autoresCadastrados = $dao->getAllAutores();
                                 <!-- <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR"> -->
                                 <hr>
                             </form>
+                            <?php } ?>
                             <?php 
                                 echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
                                  //chamada a paginação

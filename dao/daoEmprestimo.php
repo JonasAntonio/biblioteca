@@ -4,8 +4,8 @@ require_once "dao/daoLivro.php";
 class daoEmprestimo {
     public function remover($source) {
         try {
-            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_emprestimo WHERE tb_usuario_id_tb_usuario = :id");
-            $statement->bindValue(":id", $source->getIdUsuario());
+            $statement = Conexao::getInstance()->prepare("DELETE FROM tb_emprestimo WHERE id_emprestimo = :id");
+            $statement->bindValue(":id", $source->getIdEmprestimo());
             if ($statement->execute()) {
                 return "<script> alert('Registo foi excluído com êxito !'); </script>";
             } else {
@@ -16,56 +16,76 @@ class daoEmprestimo {
         }
     }
 
-    public function salvarEmprestimo($source) {
+    public function salvarEmprestimo($source, $exemplares) {
+        $hoje = date('Y-m-d');
+        $tipo_usuario = $this->getTipoUsuario($source->getIdUsuario());
+        if ($tipo_usuario == 2 || $tipo_usuario == 4) {
+            $dataVencimento = date('Y-m-d', strtotime('+10 days', strtotime($hoje)));
+        } else if($tipo_usuario == 4){
+            $dataVencimento = date('Y-m-d', strtotime('+15 days', strtotime($hoje)));
+        } else {
+            $dataVencimento = date('Y-m-d');
+        }
+
         try {
-            foreach ($source->getIdExemplar() as $key => $value) {
-                $sql = "
-                    DELETE FROM 
-                        tb_emprestimo 
-                    WHERE 
-                        tb_usuario_id_tb_usuario = :id_usuario 
-                        AND tb_exemplar_id_tb_exemplar = :id_exemplar
-                ";
-
-                $statement = Conexao::getInstance()->prepare($sql);
-                $statement->bindValue(":id_usuario", $source->getIdUsuario());
-                $statement->bindValue(":id_exemplar", $source->getIdExemplar()[$key]);
-                $statement->execute();
-
-                $sql = "
-                    INSERT INTO tb_emprestimo (
-                        tb_usuario_id_tb_usuario, 
-                        tb_exemplar_id_tb_exemplar, 
-                        dataEmprestimo, 
-                        dataDevolucao, 
-                        observacao
-                    ) VALUES (
-                        :id_usuario, 
-                        :id_exemplar, 
-                        :dataEmprestimo, 
-                        :dataDevolucao, 
-                        :observacao
-                    )
-                ";
-                
-                $statement = Conexao::getInstance()->prepare($sql);
-                $statement->bindValue(":id_usuario", $source->getIdUsuario());
-                $statement->bindValue(":id_exemplar", $source->getIdExemplar()[$key]);
-                $statement->bindValue(":id_usuario", $source->getIdUsuario());
-                $statement->bindValue(":dataEmprestimo", $source->getDataEmprestimo());
-                $statement->bindValue(":dataDevolucao", $source->getDataDevolucao());
-                $statement->bindValue(":observacao", $source->getObservacao());
-                if ($statement->execute()) {
-                    if ($statement->rowCount() > 0) {
-                        $msg = "<script> alert('Dados cadastrados com sucesso !'); </script>";
-                    } else {
-                        $msg = "<script> alert('Erro ao tentar efetivar cadastro !'); </script>";
-                    }
-                } else {
-                    throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
-                }
-            }
+            $sql = "
+                DELETE FROM 
+                    tb_emprestimo_usuario 
+                WHERE 
+                    id_emprestimo = :id_emprestimo 
+            ";
             
+            $statement = Conexao::getInstance()->prepare($sql);
+            $statement->bindValue(":id_emprestimo", $source->getIdEmprestimo());
+            $statement->execute();
+
+            $sql = "
+                INSERT INTO tb_emprestimo (
+                    id_usuario,
+                    dataEmprestimo, 
+                    dataDevolucao, 
+                    dataVencimento, 
+                    observacao
+                ) VALUES ( 
+                    :id_usuario,
+                    :dataEmprestimo, 
+                    :dataDevolucao,
+                    :dataVencimento, 
+                    :observacao
+                )
+            ";
+            
+            $statement = Conexao::getInstance()->prepare($sql);
+            $statement->bindValue(":id_usuario", $source->getIdUsuario());
+            $statement->bindValue(":dataEmprestimo", $source->getDataEmprestimo());
+            $statement->bindValue(":dataDevolucao", $source->getDataDevolucao());
+            $statement->bindValue(":dataVencimento", $dataVencimento);
+            $statement->bindValue(":observacao", $source->getObservacao());
+            if ($statement->execute()) {
+                $id_inserido = Conexao::getInstance()->lastInsertId();
+                if ($statement->rowCount() > 0) {
+                    foreach ($exemplares as $key => $value) {
+                        $sql = "
+                            INSERT INTO tb_emprestimo_usuario (
+                                id_emprestimo,
+                                id_exemplar
+                            ) VALUES (
+                                :id_emprestimo,
+                                :id_exemplar
+                            )
+                        ";
+                        $statement = Conexao::getInstance()->prepare($sql);
+                        $statement->bindValue(":id_emprestimo", $id_inserido);
+                        $statement->bindValue(":id_exemplar", $value);
+                        $statement->execute();
+                    } 
+                    return "<script> alert('Dados cadastrados com sucesso !'); </script>";
+                } else {
+					return "<script> alert('Erro ao tentar efetivar cadastro !'); </script>";
+				}
+            } else {
+				throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+			}
         } catch (PDOException $erro) {
             $msg = "Erro: " . $erro->getMessage();
         }
@@ -73,62 +93,24 @@ class daoEmprestimo {
     }
 
     public function salvar($source) {
-        // echo "<pre>";
-        // print_r($source);
-        // echo "</pre>";
-        // try {
-        //     if (!empty($source->getIdTbUsuario())) {
-        //         // $statement = Conexao::getInstance()->prepare("UPDATE tb_emprestimo SET nomeEditora=:nome WHERE id_tb_usuario = :id;");
-        //         // $statement->bindValue(":id", $source->getIdTbUsuario());
-        //         // $statement->bindValue(":id_exemplar", $source->getIdTbExemplar());
-        //     } else {
-        //         $sql = "
-        //             INSERT INTO tb_emprestimo (
-        //                 tb_usuario_id_tb_usuario, 
-        //                 tb_exemplar_id_tb_exemplar, 
-        //                 dataEmprestimo, 
-        //                 dataDevolucao, 
-        //                 observacao
-        //             ) VALUES (
-        //                 :id_usuario, 
-        //                 :id_exemplar, 
-        //                 :dataEmprestimo, 
-        //                 :dataDevolucao, 
-        //                 :observacao
-        //             )
-        //         ";
-        //         $statement = Conexao::getInstance()->prepare($sql);
-        //     }
-        //     $statement->bindValue(":id_usuario", $source->getIdUsuario());
-        //     $statement->bindValue(":id_exemplar", $source->getIdExemplar());
-        //     $statement->bindValue(":id_usuario", $source->getIdUsuario());
-        //     $statement->bindValue(":dataEmprestimo", $source->getDataEmprestimo());
-        //     $statement->bindValue(":dataDevolucao", $source->getDataDevolucao());
-        //     $statement->bindValue(":observacao", $source->getObservacao());
-        //     if ($statement->execute()) {
-        //         if ($statement->rowCount() > 0) {
-        //             return "<script> alert('Dados cadastrados com sucesso !'); </script>";
-        //         } else {
-        //             return "<script> alert('Erro ao tentar efetivar cadastro !'); </script>";
-        //         }
-        //     } else {
-        //         throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
-        //     }
-        // } catch (PDOException $erro) {
-        //     return "Erro: " . $erro->getMessage();
-        // }
+        
     }
+    
     public function atualizar($source) {
         try {
-            $statement = Conexao::getInstance()->prepare("SELECT id_tb_usuario, nomeEditora FROM tb_emprestimo WHERE id_tb_usuario = :id");
-            $statement->bindValue(":id", $source->getIdTbUsuario());
+            $sql = "
+                UPDATE tb_emprestimo SET 
+                    dataDevolucao = :dataDevolucao
+                WHERE 
+                    id_emprestimo = :id_emprestimo
+            ";
+            $statement = Conexao::getInstance()->prepare($sql);
+            $statement->bindValue(":id_emprestimo", $source->getIdEmprestimo());
+            $statement->bindValue(":dataDevolucao", date('Y-m-d'));
             if ($statement->execute()) {
-                $rs = $statement->fetch(PDO::FETCH_OBJ);
-                $source->setIdTbEditora($rs->id_tb_usuario);
-                $source->setNomeEditora($rs->nomeEditora);
-                return $source;
+                return "<script> alert('Devolvido!'); </script>";
             } else {
-                throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+                throw new PDOException("<script> alert('Não foi possível executar a declaração SQL!'); </script>");
             }
         } catch (PDOException $erro) {
             return "Erro: " . $erro->getMessage();
@@ -166,9 +148,9 @@ class daoEmprestimo {
             <thead>
                 <tr style='text-transform: uppercase;' class='active'>
                     <th style='text-align: center; font-weight: bolder;'>Usuário</th>
-                    <th style='text-align: center; font-weight: bolder;'>Exemplar</th>
+                    <th style='text-align: center; font-weight: bolder;'>Exemplares</th>
                     <th style='text-align: center; font-weight: bolder;'>Data de Empréstimo</th>
-                    <th style='text-align: center; font-weight: bolder;'>Data de Devolução Prevista</th>
+                    <th style='text-align: center; font-weight: bolder;'>Data de Vencimento</th>
                     <th style='text-align: center; font-weight: bolder;'>Data de Devolução</th>
                     <th style='text-align: center; font-weight: bolder;' colspan='2'>Ações</th>
                 </tr>
@@ -176,23 +158,37 @@ class daoEmprestimo {
             <tbody>
                 <?php foreach ($dados as $source) { ?>
                 <tr>
-                    <td style='text-align: center'><?=daoUser::getNomeUsuarioId($source->tb_usuario_id_tb_usuario)?></td>
-                    <td style='text-align: center'><?=daoLivro::getTituloLivro($source->tb_exemplar_id_tb_exemplar)?></td>
+                    <td style='text-align: center'><?=daoUser::getNomeUsuarioId($source->id_usuario)?></td>
+                    <td style='text-align: center'>
+                        <?php
+                            $exemplares = $this->getExemplaresEmprestados($source->id_emprestimo);
+                            if(!empty($exemplares)) {
+                                foreach ($exemplares as $key => $value) {
+                                    $arrExemplares[] = daoLivro::getTituloLivro($value['id_exemplar']);
+                                }
+                                asort($arrExemplares);
+                                echo implode(', ', array_unique($arrExemplares));
+                                $arrExemplares = [];  
+                            } else {
+                                echo "---";
+                            }    
+                        ?>
+                    </td>
                     <td style='text-align: center'><?=formatarData($source->dataEmprestimo)?></td>
+                    <td style='text-align: center'><?=formatarData($source->dataVencimento)?></td>
                     <td style='text-align: center'><?=formatarData($source->dataDevolucao)?></td>
-                    <td style='text-align: center'><?=formatarData($source->dataDevolucao)?></td>
-                    <td style='text-align: center'><a href='?act=upd&id=<?=$source->idtb_exemplar?>' title='Alterar'><i class='ti-reload'></i></a></td>
-                    <td style='text-align: center'><a href='?act=del&id=<?=$source->idtb_exemplar?>' title='Remover'><i class='ti-close'></i></a></td>
+                    <td style='text-align: center'><a href='?act=upd&id=<?=$source->id_emprestimo?>' title='Alterar'><i class='fa fa-archive'></i></a></td>
+                    <td style='text-align: center'><a href='?act=del&id=<?=$source->id_emprestimo?>' title='Remover'><i class='ti-close'></i></a></td>
                 </tr>
                 <?php } ?>
         </tbody>
             </table>
             <div class='box-paginacao' style='text-align: center'>
-                <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$primeira_pagina' title='Primeira Página'> Primeira  |</a>
-                <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$pagina_anterior' title='Página Anterior'> Anterior  |</a>
+                <a class='box-navegacao  $exibir_botao_inicio' href='<?=$endereco?>?page=<?=$primeira_pagina?>' title='Primeira Página'> Primeira  |</a>
+                <a class='box-navegacao  $exibir_botao_inicio' href='<?=$endereco?>?page=<?=$pagina_anterior?>' title='Página Anterior'> Anterior  |</a>
                 <?php for ($i = $range_inicial; $i <= $range_final; $i++) {
                     $destaque = ($i == $pagina_atual) ? 'destaque' : ''; ?>
-                    <a class='box-numero $destaque' href='$endereco?page=$i'> ( <?=$i?> ) </a>
+                    <a class='box-numero $destaque' href='<?=$endereco?>?page=<?=$i?>'> ( <?=$i?> ) </a>
                 <?php } ?>
                 <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$proxima_pagina?>' title='Próxima Página'>| Próxima  </a>
                 <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$ultima_pagina?>'  title='Última Página'>| Última  </a>
@@ -202,7 +198,7 @@ class daoEmprestimo {
     <?php }
 
     public function exemplarExiste($id_exemplar) {
-        $sql = "SELECT tb_exemplar_id_tb_exemplar as id_exemplar FROM tb_emprestimo WHERE tb_exemplar_id_tb_exemplar = :id_exemplar";
+        $sql = "SELECT id_exemplar FROM tb_emprestimo_usuario WHERE id_exemplar = :id_exemplar";
         $statement = Conexao::getInstance()->prepare($sql);
         $statement->bindValue(":id_exemplar", $id_exemplar);
         $statement->execute();
@@ -215,5 +211,26 @@ class daoEmprestimo {
             return false;
         }
     }
+
+    public static function getExemplaresEmprestados($id_emprestimo) {
+            $sql = "SELECT * FROM tb_emprestimo_usuario WHERE id_emprestimo = :id_emprestimo";
+            $statement = Conexao::getInstance()->prepare($sql);
+            $statement->bindValue(":id_emprestimo", $id_emprestimo);
+            $statement->execute();
+            $exemplares = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $exemplares;
+    }
+
+    public function getTipoUsuario($id) {
+        $sql = "SELECT tipo FROM tb_usuario WHERE idtb_usuario = :id"; 
+        $statement = Conexao::getInstance()->prepare($sql);
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+        $dados = $statement->fetch(PDO::FETCH_ASSOC);
+        return $dados['tipo'];
+    }
+
 }
+
+
 ?>

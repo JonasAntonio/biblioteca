@@ -64,19 +64,23 @@ class Usuario {
         return [
             [
                 'valor' => 0,
-                'nome' => 'Administrador'
+                'nome' => 'Administrador(a)'
             ],
             [
                 'valor' => 1,
-                'nome' => 'Biblioteca'
+                'nome' => 'Bibliotecário(a)'
             ],
             [
                 'valor' => 2,
-                'nome' => 'Aluno'
+                'nome' => 'Aluno(a)'
             ],
             [
                 'valor' => 3,
-                'nome' => 'Professor'
+                'nome' => 'Professor(a)'
+            ],
+            [
+                'valor' => 4,
+                'nome' => 'Funcionário(a)'
             ],
         ];
     }
@@ -84,16 +88,19 @@ class Usuario {
     public static function getTipoText($valor) {
         switch ($valor) {
             case 0:
-                return 'Administrador';
+                return 'Administrador(a)';
                 break;
             case 1:
-                return 'Biblioteca';
+                return 'Bibliotecário(a)';
                 break;
             case 2:
-                return 'Aluno';
+                return 'Aluno(a)';
                 break;
             case 3:
-                return 'Professor';
+                return 'Professor(a)';
+                break;
+            case 4:
+                return 'Funcionário(a)';
                 break;
         }
     }

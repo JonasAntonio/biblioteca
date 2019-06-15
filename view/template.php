@@ -1,4 +1,5 @@
 <?php
+require_once "db/Conexao.php";
 /**
  * Created by PhpStorm.
  * User: tassio
@@ -15,8 +16,17 @@ class Template
             unset($_SESSION['login']);
             unset($_SESSION['senha']);
             header('location:login.php');
-        }
+        } 
+        $cmd = Conexao::getInstance()->prepare("SELECT * FROM tb_usuario WHERE email = :email");
+        $cmd->bindValue(":email", $_SESSION['login']);
+        $cmd->execute();
+        $rs = $cmd->fetch(PDO::FETCH_ASSOC);
+        
+        $_SESSION['id_usuario'] = $rs['idtb_usuario'];
+        $_SESSION['nomeUsuario'] = $rs['nomeUsuario'];
+        $_SESSION['tipo_usuario'] = $rs['tipo'];
         $logado = $_SESSION['login'];
+        
         ?>
         <!doctype html>
         <html lang='en'>
@@ -38,6 +48,19 @@ class Template
             <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
             <link href='assets/css/themify-icons.css' rel='stylesheet'>
             <link href='assets/css/bootstrap-multiselect.css' rel='stylesheet'>
+            <style>
+                .multiselect-native-select > .btn-group {
+                    /* background-color: #fffcf5; */
+                    /* border-radius: 4px; */
+                    /* color: #66615b; */
+                    /* font-size: 14px; */
+                    /* transition: background-color 0.3s ease 0s; */
+                    /* padding: 7px 18px; */
+                    /* height: 40px; */
+                    /* -webkit-box-shadow: none; */
+                    /* box-shadow: none; */
+                }
+            </style>
         </head>
         <body>
     <?php }
@@ -70,7 +93,16 @@ class Template
             <script type="text/javascript">
                 j = jQuery.noConflict();
                 j(document).ready(function() {
-                    j('.multiselect').multiselect();
+                    j('.multiselect').multiselect({
+                        enableFiltering: true,
+                        includeSelectAllOption: true,
+                        buttonWidth: '100%',
+                        maxHeight: 'auto',
+                        nonSelectedText: 'Selecione alguma opção',
+                        filterPlaceholder: 'Pesquise aqui',
+                        inheritClass: true,
+                        enableCaseSensitive: true
+                    });
                 });
             </script>
         </html>
@@ -85,7 +117,7 @@ class Template
         -->
         <div class="sidebar-wrapper">
             <div class="logo">
-                <a href='index.php'><img src="assets/img/biblioteca-digital-inoveduc.jpg" height="150" width="200"></a>
+                <!-- <a href='index.php'><img src="assets/img/biblioteca-digital-inoveduc.jpg" height="150" width="200"></a> -->
                 <h4>Biblioteca</h4>
                 <small></small>
                 <a class='btn btn-info' href="logout.php">Logout</a>
@@ -103,42 +135,47 @@ class Template
                         <p > Editoras</p >
                     </a >
                 </li >
-                <li class="<?=$_SESSION['active_window'] == 'categorias' ? 'active' : ''?>">
-                    <a href = 'categorias.php' >
-                        <i class="ti-book"></i >
-                        <p > Categorias</p >
-                    </a >
-                </li >
+                <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 1) { ?>
+                    <li class="<?=$_SESSION['active_window'] == 'categorias' ? 'active' : ''?>">
+                        <a href = 'categorias.php' >
+                            <i class="ti-book"></i >
+                            <p > Categorias</p >
+                        </a >
+                    </li >
+                    <li class="<?=$_SESSION['active_window'] == 'exemplares' ? 'active' : ''?>">
+                        <a href='exemplares.php'>
+                            <i class="ti-user"></i>
+                            <p>Exemplares</p>
+                        </a>
+                    </li>
+                <?php } ?>
+
                 <li class="<?=$_SESSION['active_window'] == 'livros' ? 'active' : ''?>">
                     <a href='livros.php'>
                         <i class="ti-book"></i>
                         <p>Livros</p>
                     </a>
                 </li>
-                <li class="<?=$_SESSION['active_window'] == 'emprestimos' ? 'active' : ''?>">
-                    <a href='emprestimos.php'>
-                        <i class="ti-user"></i>
-                        <p>Empréstimos</p>
-                    </a>
-                </li>
-                <li class="<?=$_SESSION['active_window'] == 'exemplares' ? 'active' : ''?>">
-                    <a href='exemplares.php'>
-                        <i class="ti-user"></i>
-                        <p>Exemplares</p>
-                    </a>
-                </li>
-                <li class="<?=$_SESSION['active_window'] == 'reservas' ? 'active' : ''?>">
-                    <a href='reservas.php'>
-                        <i class="ti-user"></i>
-                        <p>Reservas</p>
-                    </a>
-                </li>
-                <li class="<?=$_SESSION['active_window'] == 'usuarios' ? 'active' : ''?>">
-                    <a href='usuarios.php'>
-                        <i class="ti-user"></i>
-                        <p>Usuários</p>
-                    </a>
-                </li>
+                <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 4) { ?>
+                    <li class="<?=$_SESSION['active_window'] == 'emprestimos' ? 'active' : ''?>">
+                        <a href='emprestimos.php'>
+                            <i class="ti-user"></i>
+                            <p>Empréstimos</p>
+                        </a>
+                    </li>
+                    <li class="<?=$_SESSION['active_window'] == 'reservas' ? 'active' : ''?>">
+                        <a href='reservas.php'>
+                            <i class="ti-user"></i>
+                            <p>Reservas</p>
+                        </a>
+                    </li>
+                    <li class="<?=$_SESSION['active_window'] == 'usuarios' ? 'active' : ''?>">
+                        <a href='usuarios.php'>
+                            <i class="ti-user"></i>
+                            <p>Usuários</p>
+                        </a>
+                    </li>
+                <?php } ?>
             </ul>
         </div>
     </div>

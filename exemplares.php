@@ -62,13 +62,13 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             <form action="?act=save&id=" method="POST" name="form1">
                                 <input type="hidden" name="id" value="<?= (!empty($id)) ? $id : ''?>"/>
                                 <Label>Tipo de Exemplar</Label>
-                                <select class="form-control" name="tipoExemplar">
+                                <select class="form-control multiselect" name="tipoExemplar">
                                     <option value="">--Selecione--</option>
                                     <option value="0" <?=$tipoExemplar == 0 ? 'selected' : ''?>>Circular</option>
                                     <option value="1" <?=$tipoExemplar == 1 ? 'selected' : ''?>>Não Circular</option>
                                 </select>
                                 <Label>Livro</Label>
-                                <select class="form-control" name="livro">
+                                <select class="form-control multiselect" name="livro">
                                     <option value="">--Selecione--</option>
                                     <?php foreach ($daoLivro->listAll() as $key => $value) {?>
                                         <option value="<?=$value['idtb_livro']?>" <?=$value['idtb_livro'] == $id_tb_livro ? 'selected' : ''?>><?=$value['titulo']?></option>

@@ -15,7 +15,7 @@ template::mainpanel();
                             <p class='category'></p>
                         </div>
                         <div class='content table-responsive'>
-                            <h4 class="title">Seja bem-vindo </h4>
+                            <h4 class="title">Seja bem-vindo, <?=$_SESSION['nomeUsuario']?> </h4>
                             
                         </div>
                     </div>

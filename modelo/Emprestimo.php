@@ -1,35 +1,45 @@
 <?php
 
     class Emprestimo {
-        private $tb_usuario_id_tb_usuario;
-        private $tb_exemplar_id_tb_exemplar;
+        private $id_emprestimo;
+        private $id_usuario;
         private $dataEmprestimo;
         private $dataDevolucao;
+        private $dataVencimento;
         private $observacao;
 
-        public function __construct($tb_usuario_id_tb_usuario, $tb_exemplar_id_tb_exemplar, $dataEmprestimo, $dataDevolucao, $observacao) {
-            $this->tb_usuario_id_tb_usuario = $tb_usuario_id_tb_usuario;
-            $this->tb_exemplar_id_tb_exemplar = $tb_exemplar_id_tb_exemplar;
+        public function __construct($id_emprestimo, $id_usuario, $dataEmprestimo, $dataDevolucao, $dataVencimento, $observacao) {
+            $this->id_emprestimo = $id_emprestimo;
+            $this->id_usuario = $id_usuario;
             $this->dataEmprestimo = $dataEmprestimo;
             $this->dataDevolucao = $dataDevolucao;
+            $this->dataVencimento = $dataVencimento;
             $this->observacao = $observacao;
         }
 
-        public function getIdUsuario() {
-            return $this->tb_usuario_id_tb_usuario;
+        public function getIdEmprestimo() {
+            return $this->id_emprestimo;
         }
     
-        public function setIdUsuario($tb_usuario_id_tb_usuario) {
-            $this->tb_usuario_id_tb_usuario = $tb_usuario_id_tb_usuario;
+        public function setIdEmprestimo($id_emprestimo) {
+            $this->id_emprestimo = $id_emprestimo;
         }
 
-        public function getIdExemplar() {
-            return $this->tb_exemplar_id_tb_exemplar;
+        public function getIdUsuario() {
+            return $this->id_usuario;
         }
     
-        public function setIdExemplar($tb_exemplar_id_tb_exemplar) {
-            $this->tb_exemplar_id_tb_exemplar = $tb_exemplar_id_tb_exemplar;
+        public function setIdUsuario($id_usuario) {
+            $this->id_usuario = $id_usuario;
         }
+
+        // public function getIdExemplar() {
+        //     return $this->id_exemplar;
+        // }
+    
+        // public function setIdExemplar($id_exemplar) {
+        //     $this->id_exemplar = $id_exemplar;
+        // }
     
         public function getDataEmprestimo() {
             return $this->dataEmprestimo;
@@ -45,6 +55,14 @@
     
         public function setDataDevolucao($dataDevolucao) {
             $this->dataDevolucao = $dataDevolucao;
+        }
+
+        public function getDataVencimento() {
+            return $this->dataVencimento;
+        }
+    
+        public function setDataVencimento($dataVencimento) {
+            $this->dataVencimento = $dataVencimento;
         }
 
         public function getObservacao() {

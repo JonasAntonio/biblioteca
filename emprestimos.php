@@ -18,46 +18,47 @@ $_SESSION['active_window'] = "emprestimos";
 template::sidebar();
 template::mainpanel();
 
+$hoje = date('Y-m-d');
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $id_emprestimo = (isset($_POST["id_emprestimo"]) && $_POST["id_emprestimo"] != null) ? $_POST["id_emprestimo"] : "";
     $id_usuario = (isset($_POST["id_usuario"]) && $_POST["id_usuario"] != null) ? $_POST["id_usuario"] : "";
     $exemplares = (isset($_POST["exemplares"]) && $_POST["exemplares"] != null) ? $_POST["exemplares"] : "";
-    $dataEmprestimo = date('Y-m-d');
+    $dataEmprestimo = $hoje;
     $dataDevolucao = (isset($_POST["dataDevolucao"]) && $_POST["dataDevolucao"] != null) ? $_POST["dataDevolucao"] : "";
     $observacao = (isset($_POST["observacao"]) && $_POST["observacao"] != null) ? $_POST["observacao"] : "";
-} else if (!isset($id_usuario)) {
-    // Se não se não foi setado nenhum valor para variável $id_usuario
-    // $id_usuario = (isset($_GET["id_usuario"]) && $_GET["id_usuario"] != null) ? $_GET["id_usuario"] : "";
-    // $id_usuario = NULL;
-    $exemplares = NULL;
-    $dataEmprestimo = NULL;
-    $dataDevolucao = NULL;
-    $observacao = NULL;
-}
-
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" ) {
-    $emprestimo = new Emprestimo($id_usuario, $exemplares, $dataEmprestimo, $dataDevolucao, $observacao);
-    $msg = $dao->salvarEmprestimo($emprestimo);
+    
+} else if (!isset($id_emprestimo)) {
+    $id_emprestimo = (isset($_GET["id"]) && $_GET["id"] != null) ? $_GET["id"] : "";
     $id_usuario = NULL;
     $exemplares = NULL;
     $dataEmprestimo = NULL;
     $dataDevolucao = NULL;
     $observacao = NULL;
+    
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id_usuario != "") {
-    $emprestimo = new Emprestimo($id_usuario, '', '', '', '', '');
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" ) {
+    $emprestimo = new Emprestimo($id_emprestimo, $id_usuario, $dataEmprestimo, $dataDevolucao, '', $observacao);
+    $msg = $dao->salvarEmprestimo($emprestimo, $exemplares);
+    $id_usuario = NULL;
+    $id_emprestimo = NULL;
+    $exemplares = NULL;
+    $dataEmprestimo = NULL;
+    $dataDevolucao = NULL;
+    $observacao = NULL;
+}
+
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id_emprestimo  != "") {
+    $emprestimo = new Emprestimo($id_emprestimo, '', '', '', '', '');
     $resultado = $dao->atualizar($emprestimo);
-    $id_usuario = $resultado->getIdUsuario();
-    $exemplares = $resultado->getIdExemplar();
-    $dataEmprestimo = $resultado->getDataEmprestimo();
-    $dataDevolucao = $resultado->getDataDevolucao();
-    $observacao = $resultado->getObservacao();
+    // $id_emprestimo = $resultado->getIdEmprestimo();
 }
 
-if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_usuario != "") {
-    $emprestimo = new Emprestimo($id_usuario, "", "", "", "", "");
+if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "") {
+    $emprestimo = new Emprestimo($id_emprestimo , "", "", "", "", "");
     $msg = $dao->remover($emprestimo);
-    $id_usuario = null;
+    $id_emprestimo  = null;
 }
 
 ?>
@@ -78,7 +79,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_usuario != "") {
                                 echo (!empty($id_usuario)) ? $id_usuario : '';
                                 ?>"/>
                                 <Label for="usuario">Usuário</Label>
-                                <select class="form-control" name="id_usuario">
+                                <select class="form-control multiselect" name="id_usuario">
                                     <option value="">--Selecione--</option>
                                     <? foreach ($daoUser->listAll() as $value) {?>
                                         <option value="<?=$value['idtb_usuario']?>"
@@ -88,8 +89,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_usuario != "") {
                                     <?}?>
                                 </select>
                                 <Label>Exemplares</Label>
-                                <select class="form-control" name="exemplares[]" multiple>
-                                    <option value="">--Selecione--</option>
+                                <select class="form-control multiselect" name="exemplares[]" multiple>
                                     <? foreach ($daoExemplar->listAll() as $value) {
                                         if(!$dao->exemplarExiste($value['idtb_exemplar'])) {?>
                                         <option value="<?=$value['idtb_exemplar']?>"
@@ -99,8 +99,8 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_usuario != "") {
                                         <? }
                                     } ?>
                                 </select>
-                                <label for="dataDevolucao">Data de Devolução</label>
-                                <input type="date" name="dataDevolucao" id="dataDevolucao" class="form-control">
+                                <!-- <label for="dataDevolucao">Data de Devolução</label>
+                                <input type="date" name="dataDevolucao" id="dataDevolucao" class="form-control"> -->
                                 <label for="observacao">Observação</label>
                                 <textarea name="observacao" id="observacao" cols="30" rows="10" class="form-control"></textarea>
                                 <br>

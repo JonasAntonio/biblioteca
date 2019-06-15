@@ -1457,11 +1457,11 @@ textarea.form-control {
   .dropdown-menu.dropdown-danger > li > a:hover, .dropdown-menu.dropdown-danger > li > a:focus {
     background-color: #EB5E28; }
 
-.btn-group.select {
+/* .btn-group.select {
   overflow: hidden; }
 
 .btn-group.select.open {
-  overflow: visible; }
+  overflow: visible; } */
 
 .card {
   border-radius: 6px;

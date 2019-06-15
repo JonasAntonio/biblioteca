@@ -67,7 +67,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                         </div>
                         <div class='content table-responsive'>
                             <form action="?act=save&id=" method="POST" name="form1">
-
+                            <?php if($_SESSION['tipo_usuario'] == 0) { ?>
                                 <input type="hidden" name="id" value="<?php
                                 // Preenche o id no campo id com um valor "value"
                                 echo (!empty($id)) ? $id : '';
@@ -78,7 +78,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 echo (!empty($nome)) ? $nome : '';
                                 ?>" required/>
                                 <Label>Tipo</Label>
-                                <select class="form-control" name="tipo">
+                                <select class="form-control multiselect" name="tipo">
                                     <option value="">--Selecione--</option>
                                     <?
                                     foreach (Usuario::tipoUsuario() as $value) {?>
@@ -102,10 +102,10 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR">
                                 <hr>
                             </form>
-                            <?php
-                            echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
-                            //chamada a paginação
-                            $dao->tabelapaginada();
+                            <?php }
+                                echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
+                                //chamada a paginação
+                                $dao->tabelapaginada();
                             ?>
                         </div>
                     </div>
