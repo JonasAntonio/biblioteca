@@ -178,4 +178,13 @@ class daoUser implements iPage {
 		}
     }
 
+    public static function getTipoUsuario($id) {
+        $sql = "SELECT tipo FROM tb_usuario WHERE idtb_usuario = :id"; 
+        $statement = Conexao::getInstance()->prepare($sql);
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+        $dados = $statement->fetch(PDO::FETCH_ASSOC);
+        return $dados['tipo'];
+    }
+
 }

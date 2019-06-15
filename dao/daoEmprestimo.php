@@ -1,9 +1,15 @@
 <?php
 require_once "dao/daoLivro.php";
-// require_once "iPage.php";
+
 class daoEmprestimo {
     public function remover($source) {
         try {
+            foreach($this->getExemplaresEmprestados($source->getIdEmprestimo()) AS $exemplar) {
+                $sqlExemplar = "UPDATE tb_exemplar SET emprestado = 'N' WHERE idtb_exemplar = :id_exemplar";
+                $stmtExemplar = Conexao::getInstance()->prepare($sqlExemplar);
+                $stmtExemplar->bindValue(":id_exemplar", $exemplar['id_exemplar']);
+                $stmtExemplar->execute();
+            }
             $statement = Conexao::getInstance()->prepare("DELETE FROM tb_emprestimo WHERE id_emprestimo = :id");
             $statement->bindValue(":id", $source->getIdEmprestimo());
             if ($statement->execute()) {
@@ -18,10 +24,10 @@ class daoEmprestimo {
 
     public function salvarEmprestimo($source, $exemplares) {
         $hoje = date('Y-m-d');
-        $tipo_usuario = $this->getTipoUsuario($source->getIdUsuario());
+        $tipo_usuario = daoUser::getTipoUsuario($source->getIdUsuario());
         if ($tipo_usuario == 2 || $tipo_usuario == 4) {
             $dataVencimento = date('Y-m-d', strtotime('+10 days', strtotime($hoje)));
-        } else if($tipo_usuario == 4){
+        } else if($tipo_usuario == 3) {
             $dataVencimento = date('Y-m-d', strtotime('+15 days', strtotime($hoje)));
         } else {
             $dataVencimento = date('Y-m-d');
@@ -74,8 +80,14 @@ class daoEmprestimo {
                                 :id_exemplar
                             )
                         ";
+                        
                         $statement = Conexao::getInstance()->prepare($sql);
                         $statement->bindValue(":id_emprestimo", $id_inserido);
+                        $statement->bindValue(":id_exemplar", $value);
+                        $statement->execute();
+                        
+                        $sql = "UPDATE tb_exemplar SET emprestado = 'S' WHERE idtb_exemplar = :id_exemplar";
+                        $statement = Conexao::getInstance()->prepare($sql);
                         $statement->bindValue(":id_exemplar", $value);
                         $statement->execute();
                     } 
@@ -92,10 +104,6 @@ class daoEmprestimo {
         return $msg;
     }
 
-    public function salvar($source) {
-        
-    }
-    
     public function atualizar($source) {
         try {
             $sql = "
@@ -108,6 +116,12 @@ class daoEmprestimo {
             $statement->bindValue(":id_emprestimo", $source->getIdEmprestimo());
             $statement->bindValue(":dataDevolucao", date('Y-m-d'));
             if ($statement->execute()) {
+                foreach($this->getExemplaresEmprestados($source->getIdEmprestimo()) AS $exemplar) {
+                    $sqlExemplar = "UPDATE tb_exemplar SET emprestado = 'N' WHERE idtb_exemplar = :id_exemplar";
+                    $stmtExemplar = Conexao::getInstance()->prepare($sqlExemplar);
+                    $stmtExemplar->bindValue(":id_exemplar", $exemplar['id_exemplar']);
+                    $stmtExemplar->execute();
+                }
                 return "<script> alert('Devolvido!'); </script>";
             } else {
                 throw new PDOException("<script> alert('Não foi possível executar a declaração SQL!'); </script>");
@@ -197,15 +211,25 @@ class daoEmprestimo {
         <?php } ?>
     <?php }
 
-    public function exemplarExiste($id_exemplar) {
+    public function exemplarDisponivel($id_exemplar) {
         $sql = "SELECT id_exemplar FROM tb_emprestimo_usuario WHERE id_exemplar = :id_exemplar";
+        // $sql = "
+        //     SELECT 
+        //         eu.id_exemplar
+        //     FROM
+        //         tb_emprestimo_usuario as eu
+        //             right JOIN
+        //         tb_emprestimo as e ON eu.id_emprestimo = e.id_emprestimo
+        //     WHERE
+        //         (eu.id_exemplar = :id_exemplar
+        //         AND e.dataDevolucao != '0000-00-00')
+                
+        // ";
         $statement = Conexao::getInstance()->prepare($sql);
         $statement->bindValue(":id_exemplar", $id_exemplar);
         $statement->execute();
         $dados = $statement->fetchAll(PDO::FETCH_ASSOC);
-        
         if ($statement->rowCount() > 0) {
-            var_dump($dados);
             return true;
         } else {
             return false;
@@ -219,15 +243,6 @@ class daoEmprestimo {
             $statement->execute();
             $exemplares = $statement->fetchAll(PDO::FETCH_ASSOC);
         return $exemplares;
-    }
-
-    public function getTipoUsuario($id) {
-        $sql = "SELECT tipo FROM tb_usuario WHERE idtb_usuario = :id"; 
-        $statement = Conexao::getInstance()->prepare($sql);
-        $statement->bindValue(":id", $id);
-        $statement->execute();
-        $dados = $statement->fetch(PDO::FETCH_ASSOC);
-        return $dados['tipo'];
     }
 
 }

@@ -153,6 +153,8 @@ class daoExemplar implements iPage {
                 tb_exemplar AS e
                     LEFT JOIN
                 tb_livro l ON e.tb_livro_id_tb_livro = l.idtb_livro
+            WHERE 
+                e.emprestado = 'N'
             ORDER BY l.idtb_livro
         ";
 		$statement = Conexao::getInstance()->prepare($sql);

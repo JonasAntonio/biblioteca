@@ -52,7 +52,6 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "save" ) {
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "upd" && $id_emprestimo  != "") {
     $emprestimo = new Emprestimo($id_emprestimo, '', '', '', '', '');
     $resultado = $dao->atualizar($emprestimo);
-    // $id_emprestimo = $resultado->getIdEmprestimo();
 }
 
 if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "") {
@@ -74,10 +73,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "
                         </div>
                         <div class='content table-responsive'>
                             <form action="?act=save&id_usuario=" method="POST" name="form1">
-                                <input type="hidden" name="id_usuario" value="<?php
-                                // Preenche o id_usuario no campo id_usuario com um valor "value"
-                                echo (!empty($id_usuario)) ? $id_usuario : '';
-                                ?>"/>
+                                <input type="hidden" name="id_usuario" value="<?=(!empty($id_usuario)) ? $id_usuario : ''?>"/>
                                 <Label for="usuario">Usuário</Label>
                                 <select class="form-control multiselect" name="id_usuario">
                                     <option value="">--Selecione--</option>
@@ -91,7 +87,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "
                                 <Label>Exemplares</Label>
                                 <select class="form-control multiselect" name="exemplares[]" multiple>
                                     <? foreach ($daoExemplar->listAll() as $value) {
-                                        if(!$dao->exemplarExiste($value['idtb_exemplar'])) {?>
+                                        // if($dao->exemplarDisponivel($value['idtb_exemplar'])) {
+                                            if(true) {
+                                            ?>
                                         <option value="<?=$value['idtb_exemplar']?>"
                                             <?php if(!empty($tipo)) echo $tipo == $value['idtb_exemplar'] ? 'selected' : ''?>>
                                             <?=$value['titulo']?>
@@ -99,8 +97,6 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "
                                         <? }
                                     } ?>
                                 </select>
-                                <!-- <label for="dataDevolucao">Data de Devolução</label>
-                                <input type="date" name="dataDevolucao" id="dataDevolucao" class="form-control"> -->
                                 <label for="observacao">Observação</label>
                                 <textarea name="observacao" id="observacao" cols="30" rows="10" class="form-control"></textarea>
                                 <br>
@@ -110,7 +106,6 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "
                             </form>
                             <?php
                             echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
-                            //chamada a paginação
                             $dao->tabelapaginada();
                             ?>
                         </div>
