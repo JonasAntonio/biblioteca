@@ -166,6 +166,30 @@ class daoExemplar implements iPage {
 		}
     }
 
+    public function listAllReservas(){
+        $sql = "
+            SELECT 
+                e.idtb_exemplar,
+                e.tipoExemplar,
+                l.titulo
+            FROM
+                tb_exemplar AS e
+                    LEFT JOIN
+                tb_livro l ON e.tb_livro_id_tb_livro = l.idtb_livro
+            WHERE 
+                e.reservado = 'N'
+                AND e.tipoExemplar = 0
+            ORDER BY l.idtb_livro
+        ";
+		$statement = Conexao::getInstance()->prepare($sql);
+		if ($statement->execute()) {
+			$rs = $statement->fetchAll(PDO::FETCH_ASSOC);
+			return $rs;
+		} else {
+			throw new PDOException("<script> alert('Não foi possível executar a declaração SQL !'); </script>");
+		}
+    }
+
 }
 
 

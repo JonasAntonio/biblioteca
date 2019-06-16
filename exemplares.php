@@ -74,7 +74,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                         <option value="<?=$value['idtb_livro']?>" <?=$value['idtb_livro'] == $id_tb_livro ? 'selected' : ''?>><?=$value['titulo']?></option>
                                     <?php } ?>
                                 </select>
-                                <br/>
+                                <br/><br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
                                 <!-- <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR"> -->
                                 <hr>

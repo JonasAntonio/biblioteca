@@ -86,16 +86,12 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id_emprestimo  != "
                                 </select>
                                 <Label>Exemplares</Label>
                                 <select class="form-control multiselect" name="exemplares[]" multiple>
-                                    <? foreach ($daoExemplar->listAll() as $value) {
-                                        // if($dao->exemplarDisponivel($value['idtb_exemplar'])) {
-                                            if(true) {
-                                            ?>
+                                    <? foreach ($daoExemplar->listAll() as $value) { ?>
                                         <option value="<?=$value['idtb_exemplar']?>"
                                             <?php if(!empty($tipo)) echo $tipo == $value['idtb_exemplar'] ? 'selected' : ''?>>
                                             <?=$value['titulo']?>
                                         </option>
-                                        <? }
-                                    } ?>
+                                    <? } ?>
                                 </select>
                                 <label for="observacao">Observação</label>
                                 <textarea name="observacao" id="observacao" cols="30" rows="10" class="form-control"></textarea>

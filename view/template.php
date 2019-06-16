@@ -49,6 +49,27 @@ class Template
             <link href='assets/css/themify-icons.css' rel='stylesheet'>
             <link href='assets/css/bootstrap-multiselect.css' rel='stylesheet'>
             <style>
+                .mouse-hover :hover {cursor: pointer}
+                .form-control {
+                    border-color: #66615B !important;
+                    box-sizing: border-box;
+                    border-width: 2px;    
+                }
+                .table-bordered {
+                    border-color: #66615B !important;
+                    box-sizing: border-box;
+                    border-width: 2px;    
+                }
+                .table-bordered>tbody>tr>td {
+                    border-color: #66615B !important;
+                    box-sizing: border-box;
+                    border-width: 2px; 
+                }
+                .table-bordered>thead>tr>th {
+                    border-color: #66615B !important;
+                    box-sizing: border-box;
+                    border-width: 2px; 
+                }
                 .multiselect-native-select > .btn-group {
                     /* background-color: #fffcf5; */
                     /* border-radius: 4px; */
@@ -118,9 +139,9 @@ class Template
         <div class="sidebar-wrapper">
             <div class="logo">
                 <!-- <a href='index.php'><img src="assets/img/biblioteca-digital-inoveduc.jpg" height="150" width="200"></a> -->
-                <h4>Biblioteca</h4>
+                <div class='mouse-hover text-primary' onclick="document.location='index.php'"><h4>Biblioteca</h4></div>
                 <small></small>
-                <a class='btn btn-info' href="logout.php">Logout</a>
+                <button class='btn btn-info' onclick="document.location='logout.php'">Logout</button>
             </div>
             <ul class="nav">
                 <li class="<?=$_SESSION['active_window'] == 'autores' ? 'active' : ''?>">
