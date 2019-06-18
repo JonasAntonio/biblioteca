@@ -29,7 +29,7 @@ class Template
         
         ?>
         <!doctype html>
-        <html lang='en'>
+        <html lang='pt-br'>
         <head>
             <meta charset='utf-8' />
             <link rel='icon' type='image/png' sizes='96x96' href='assets/img/favicon.jpg'>
@@ -203,8 +203,7 @@ class Template
     
     <?php 
     }
-    public static function mainpanel()
-    {
+    public static function mainpanel() {
         date_default_timezone_set('America/Sao_Paulo');
         $data = date("F j, Y"); ?>
         <div class="main-panel">
@@ -217,7 +216,8 @@ class Template
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="index.php">Home</a>
+                    <a class="btn btn-default" href="index.php">Home</a>
+                    <a class="btn btn-default" href="pdf/tcpdf/relatorioAll.php">Exportar todos os dados <span class="fa fa-download"></span></a>
                 </div>
             </div>
         </nav>

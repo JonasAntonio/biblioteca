@@ -8,7 +8,7 @@ template::mainpanel();
     <div class='content' xmlns="http://www.w3.org/1999/html">
         <div class='container-fluid'>
             <div class='row'>
-                <div class='col-md-12'>
+                <!-- <div class='col-md-12'>
                     <div class='card'>
                         <div class='header'>
                             <h1 class='title' style="text-align: center">Biblioteca</h1>
@@ -19,7 +19,7 @@ template::mainpanel();
                             
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

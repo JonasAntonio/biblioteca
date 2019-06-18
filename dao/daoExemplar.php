@@ -190,6 +190,25 @@ class daoExemplar implements iPage {
 		}
     }
 
+    // public static function getNomeLivroExemplar($id_exemplar) {
+    //     $sql = "
+    //         SELECT 
+    //             l.titulo
+    //         FROM
+    //             tb_livro AS l
+    //                 LEFT JOIN
+    //             tb_exemplar AS e ON l.idtb_livro = e.tb_livro_id_tb_livro
+    //         WHERE
+    //             e.idtb_exemplar = :id
+    //     "; 
+    //     $statement = Conexao::getInstance()->prepare($sql);
+    //     $statement->bindValue(":id", $id_exemplar);
+    //     $statement->execute();
+    //     $dados = $statement->fetch(PDO::FETCH_ASSOC);
+    //     return $dados['tipo'];
+        
+    // }
+
 }
 
 

@@ -127,7 +127,7 @@ $autoresCadastrados = $dao->getAllAutores();
                                 </select>
                                 <br/><br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
-                                <!-- <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR"> -->
+                                <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php?mode=livros"' value="EXPORTAR">
                                 <hr>
                             </form>
                             <?php } ?>

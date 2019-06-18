@@ -264,6 +264,7 @@ class daoReserva {
                         <td style='text-align: center'><a href='?act=del&id=<?=$source->id_reserva?>' title='Remover'><i class='ti-close'></i></a></td>
                     <?php } else {?>
                         <td></td>
+                        <td></td>
                     <?php } ?>
                 </tr>
                 <?php } ?>

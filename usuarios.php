@@ -99,7 +99,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 <input class="form-control" type="password" size="50" name="confirmar_senha"/>
                                 <br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
-                                <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php"' value="EXPORTAR">
+                                <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php?mode=usuarios"' value="EXPORTAR">
                                 <hr>
                             </form>
                             <?php }

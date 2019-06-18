@@ -68,6 +68,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 ?>" required/>
                                 <br/>
                                 <input class="btn btn-success" type="submit" value="REGISTRAR">
+                                <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php?mode=editoras"' value="EXPORTAR">
                                 <hr>
                             </form>
                             <?php
