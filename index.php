@@ -16,11 +16,11 @@ template::mainpanel();
                 <div class="col-md-12">
                     <div class="col-md-6">
                         <p>Livros reservados nos últimos 3 meses</p>
-                        <img class="responsive-img" src="PHPlot/graficoLivroReservadoMes.php" />
+                        <img class="responsive-img" src="graficos/graficoLivroReservadoMes.php" />
                     </div>
                     <div class="col-md-6">
                         <p>Livros emprestados nos últimos 3 meses</p>
-                        <img class="responsive-img" src="PHPlot/graficoLivroEmprestadoMes.php" />
+                        <img class="responsive-img" src="graficos/graficoLivroEmprestadoMes.php" />
                     </div>
                 </div>
             </div>
