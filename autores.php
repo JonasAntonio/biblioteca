@@ -52,9 +52,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                         <div class='header'>
                             <h4 class='title'>Autores</h4>
                             <p class='category'>Lista de Autores do Sistema</p>
-
                         </div>
                         <div class='content table-responsive'>
+                            <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 1) { ?>
                             <form action="?act=save&id=" method="POST" name="form1">
 
                                 <input type="hidden" name="id" value="<?php
@@ -73,6 +73,7 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                             </form>
                             <?php
                             echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
+                            }
                             //chamada a paginação
                             $object->tabelapaginada();
                             ?>

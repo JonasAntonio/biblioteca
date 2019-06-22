@@ -217,7 +217,10 @@ class Template
                         <span class="icon-bar bar3"></span>
                     </button>
                     <a class="btn btn-default" href="index.php">Home</a>
-                    <a class="btn btn-default" href="pdf/tcpdf/relatorioAll.php">Exportar todos os dados <span class="fa fa-download"></span></a>
+                    <?php if($_SESSION['tipo_usuario'] == 0) { ?>
+                        <a class="btn btn-default" href="pdf/tcpdf/relatorioAll.php">Exportar todos os dados <span class="fa fa-download"></span></a>
+                        <a class="btn btn-default" href="pdf/tcpdf/graficos.php">Exportar gráficos <span class="fa fa-download"></span></a>
+                    <?php } ?>
                 </div>
             </div>
         </nav>

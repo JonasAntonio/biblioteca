@@ -102,8 +102,9 @@ if (isset($_REQUEST["act"]) && $_REQUEST["act"] == "del" && $id != "") {
                                 <input class="btn btn-success" type="button" onclick='document.location="pdf/tcpdf/relatorio.php?mode=usuarios"' value="EXPORTAR">
                                 <hr>
                             </form>
-                            <?php }
+                            <?php 
                                 echo (isset($msg) && ($msg != null || $msg != "")) ? $msg : '';
+                            }
                                 //chamada a paginação
                                 $dao->tabelapaginada();
                             ?>

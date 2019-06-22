@@ -58,7 +58,7 @@ class daoEditora implements iPage {
         //endereço atual da página
         $endereco = $_SERVER ['PHP_SELF'];
         /* Constantes de configuração */
-        define('QTDE_REGISTROS', 2);
+        define('QTDE_REGISTROS', 10);
         define('RANGE_PAGINAS', 3);
         /* Recebe o número da página via parâmetro na URL */
         $pagina_atual = (isset($_GET['page']) && is_numeric($_GET['page'])) ? $_GET['page'] : 1;
@@ -90,44 +90,43 @@ class daoEditora implements iPage {
         $exibir_botao_inicio = ($range_inicial < $pagina_atual) ? 'mostrar' : 'esconder';
         /* Verifica se vai exibir o botão "Anterior" e "Último" */
         $exibir_botao_final = ($range_final > $pagina_atual) ? 'mostrar' : 'esconder';
-        if (!empty($dados)):
-                    echo "
-             <table class='table table-striped table-bordered'>
-             <thead>
-               <tr style='text-transform: uppercase;' class='active'>
-                <th style='text-align: center; font-weight: bolder;'>ID</th>
-                <th style='text-align: center; font-weight: bolder;'>Nome</th>
-                <th style='text-align: center; font-weight: bolder;' colspan='2'>Ações</th>
-               </tr>
-             </thead>
-             <tbody>";
-                    foreach ($dados as $source):
-                        echo "<tr>
-                <td style='text-align: center'>$source->idtb_editora</td>
-                <td style='text-align: center'>$source->nomeEditora</td>
-                <td style='text-align: center'><a href='?act=upd&id=$source->idtb_editora' title='Alterar'><i class='ti-reload'></i></a></td>
-                <td style='text-align: center'><a href='?act=del&id=$source->idtb_editora' title='Remover'><i class='ti-close'></i></a></td>
-               </tr>";
-                    endforeach;
-                    echo "
-        </tbody>
+        if (!empty($dados)) { ?>
+            <table class='table table-striped table-bordered'>
+            <thead>
+                <tr style='text-transform: uppercase;' class='active'>
+                    <th style='text-align: center; font-weight: bolder;'>ID</th>
+                    <th style='text-align: center; font-weight: bolder;'>Nome</th>
+                    <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 1) { ?>
+                        <th style='text-align: center; font-weight: bolder;' colspan='2'>Ações</th>
+                    <?php } ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($dados as $source) { ?>
+                    <tr>
+                        <td style='text-align: center'><?=$source->idtb_editora?></td>
+                        <td style='text-align: center'><?=$source->nomeEditora?></td>
+                        <?php if($_SESSION['tipo_usuario'] == 0 || $_SESSION['tipo_usuario'] == 1) { ?>
+                            <td style='text-align: center'><a href='?act=upd&id=<?=$source->idtb_editora?>' title='Alterar'><i class='ti-reload'></i></a></td>
+                            <td style='text-align: center'><a href='?act=del&id=<?=$source->idtb_editora?>' title='Remover'><i class='ti-close'></i></a></td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
+            </tbody>
             </table>
-             <div class='box-paginacao' style='text-align: center'>
-               <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$primeira_pagina' title='Primeira Página'> Primeira  |</a>
-               <a class='box-navegacao  $exibir_botao_inicio' href='$endereco?page=$pagina_anterior' title='Página Anterior'> Anterior  |</a>
-        ";
-                    /* Loop para montar a páginação central com os números */
-                    for ($i = $range_inicial; $i <= $range_final; $i++):
-                        $destaque = ($i == $pagina_atual) ? 'destaque' : '';
-                        echo "<a class='box-numero $destaque' href='$endereco?page=$i'> ( $i ) </a>";
-                    endfor;
-                    echo "<a class='box-navegacao $exibir_botao_final' href='$endereco?page=$proxima_pagina' title='Próxima Página'>| Próxima  </a>
-                          <a class='box-navegacao $exibir_botao_final' href='$endereco?page=$ultima_pagina'  title='Última Página'>| Última  </a>
-             </div>";
-                else:
-                    echo "<p class='bg-danger'>Nenhum registro foi encontrado!</p>
-             ";
-                endif;
+            <div class='box-paginacao' style='text-align: center'>
+                <a class='box-navegacao  <?=$exibir_botao_inicio?>' href='<?=$endereco?>?page=<?=$primeira_pagina?>' title='Primeira Página'> Primeira  |</a>
+                <a class='box-navegacao  <?=$exibir_botao_inicio?>' href='<?=$endereco?>?page=<?=$pagina_anterior?>' title='Página Anterior'> Anterior  |</a>
+                <?php for ($i = $range_inicial; $i <= $range_final; $i++) {
+                    $destaque = ($i == $pagina_atual) ? 'destaque' : ''; ?>
+                    <a class='box-numero <?=$destaque?>' href='<?=$endereco?>?page=<?=$i?>'> ( <?=$i?> ) </a>
+                <?php } ?>
+                <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$proxima_pagina?>' title='Próxima Página'>| Próxima  </a>
+                <a class='box-navegacao <?=$exibir_botao_final?>' href='<?=$endereco?>?page=<?=$ultima_pagina?>'  title='Última Página'>| Última  </a>
+            </div>
+            <?php } else { ?>
+                <p class='bg-danger'>Nenhum registro foi encontrado!</p> 
+            <?php } 
     }
 }
 ?>
